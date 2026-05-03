@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAFF | Recrutement</title>
+  <link rel="icon" href="/images/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/header.js"></script>
+  <script defer src="/js/footer.js"></script>
+  <script defer src="/js/i18n.js"></script>
+  <style>
+    .offers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+    .offer-card {
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      border: 1px solid #edf2f0;
+    }
+    .offer-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      border-color: #e76f51;
+    }
+    .offer-header {
+      background: linear-gradient(135deg, #0a3528, #1a5a45);
+      color: white;
+      padding: 20px;
+    }
+    .offer-header h3 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      font-family: Georgia, serif;
+    }
+    .offer-meta {
+      display: flex;
+      gap: 15px;
+      font-size: 0.8rem;
+      opacity: 0.9;
+      flex-wrap: wrap;
+    }
+    .offer-body {
+      padding: 20px;
+    }
+    .offer-body p {
+      color: #4a5568;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .offer-footer {
+      padding: 15px 20px;
+      background: #f8fafc;
+      border-top: 1px solid #edf2f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .offer-deadline {
+      font-size: 0.8rem;
+      color: #6c757d;
+    }
+    .btn-apply {
+      background: #e76f51;
+      color: white;
+      padding: 8px 20px;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: 0.2s;
+    }
+    .btn-apply:hover {
+      background: #d45a3a;
+      transform: translateY(-2px);
+    }
+    .no-offers {
+      text-align: center;
+      padding: 60px;
+      background: #f8fafc;
+      border-radius: 24px;
+      color: #6c757d;
+    }
+    .loading-spinner {
+      text-align: center;
+      padding: 60px;
+      grid-column: span 3;
+    }
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #edf2f0;
+      border-top-color: #e76f51;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      margin-top: 30px;
+    }
+    @media (max-width: 900px) {
+      .grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 700px) {
+      .offers-grid {
+        grid-template-columns: 1fr;
+      }
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="header-placeholder"></div>
+
+<main>
+  <section class="page-hero" id="page-hero">
+    <div class="hero-bg-image" id="hero-bg-image"></div>
+    <div class="container">
+      <div class="eyebrow" data-i18n="recrutement_eyebrow">Recrutement</div>
+      <h1 data-i18n="recrutement_title">Rejoignez notre équipe</h1>
+      <p class="lead" data-i18n="recrutement_intro">Des opportunités pour contribuer à notre mission au service des familles.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div id="offers-list" class="offers-grid">
+        <div class="loading-spinner">
+          <div class="spinner"></div>
+          <p>Chargement des offres...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <h2 data-i18n="recrutement_why_title">Pourquoi rejoindre FAFF ?</h2>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-body" style="text-align: center;">
+            <div style="font-size: 2.5rem; margin-bottom: 15px;">💼</div>
+            <h3 data-i18n="recrutement_why_1_title">Mission porteuse de sens</h3>
+            <p data-i18n="recrutement_why_1_text">Contribuez directement à l'épanouissement des familles afro francophones.</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body" style="text-align: center;">
+            <div style="font-size: 2.5rem; margin-bottom: 15px;">🌱</div>
+            <h3 data-i18n="recrutement_why_2_title">Environnement bienveillant</h3>
+            <p data-i18n="recrutement_why_2_text">Une équipe dynamique et un cadre de travail collaboratif.</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body" style="text-align: center;">
+            <div style="font-size: 2.5rem; margin-bottom: 15px;">📈</div>
+            <h3 data-i18n="recrutement_why_3_title">Développement professionnel</h3>
+            <p data-i18n="recrutement_why_3_text">Des opportunités de formation et d'évolution au sein de l'organisme.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-placeholder"></div>
+
+<script>
+  function refreshBanner() {
+    const bannerDiv = document.getElementById('hero-bg-image');
+    if (bannerDiv) {
+      const timestamp = new Date().getTime();
+      bannerDiv.style.backgroundImage = `url('/images/recrutement-banner.png?t=${timestamp}')`;
+    }
+  }
+
+  function getTranslation(key) {
+    // Récupérer la langue depuis localStorage
+    let lang = localStorage.getItem('faff_lang') || 'fr';
+    
+    // Traductions manuelles (fallback)
+    const translations = {
+      fr: {
+        recrutement_no_offers: 'Aucune offre disponible pour le moment.',
+        recrutement_location: 'Lieu',
+        recrutement_contract: 'Type de contrat',
+        recrutement_deadline: 'Candidatures jusqu\'au',
+        recrutement_no_deadline: 'Date limite non spécifiée',
+        recrutement_apply: 'Postuler',
+        error_loading: 'Erreur de chargement. Veuillez réessayer plus tard.',
+        recrutement_why_title: 'Pourquoi rejoindre FAFF ?',
+        recrutement_why_1_title: 'Mission porteuse de sens',
+        recrutement_why_1_text: 'Contribuez directement à l\'épanouissement des familles afro francophones.',
+        recrutement_why_2_title: 'Environnement bienveillant',
+        recrutement_why_2_text: 'Une équipe dynamique et un cadre de travail collaboratif.',
+        recrutement_why_3_title: 'Développement professionnel',
+        recrutement_why_3_text: 'Des opportunités de formation et d\'évolution au sein de l\'organisme.'
+      },
+      en: {
+        recrutement_no_offers: 'No job offers available at the moment.',
+        recrutement_location: 'Location',
+        recrutement_contract: 'Contract type',
+        recrutement_deadline: 'Applications until',
+        recrutement_no_deadline: 'No deadline specified',
+        recrutement_apply: 'Apply',
+        error_loading: 'Loading error. Please try again later.',
+        recrutement_why_title: 'Why join FAFF?',
+        recrutement_why_1_title: 'Meaningful mission',
+        recrutement_why_1_text: 'Directly contribute to the empowerment of Afro-Francophone families.',
+        recrutement_why_2_title: 'Supportive environment',
+        recrutement_why_2_text: 'A dynamic team and a collaborative work environment.',
+        recrutement_why_3_title: 'Professional development',
+        recrutement_why_3_text: 'Training opportunities and career growth within the organization.'
+      }
+    };
+    
+    if (translations[lang] && translations[lang][key]) {
+      return translations[lang][key];
+    }
+    return key;
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+
+  async function loadOffers() {
+    const container = document.getElementById('offers-list');
+    if (!container) return;
+    
+    console.log('Chargement des offres...');
+    
+    try {
+      const response = await fetch('/api/recrutement');
+      console.log('Réponse status:', response.status);
+      
+      if (!response.ok) throw new Error('Erreur serveur');
+      
+      const offers = await response.json();
+      console.log('Offres reçues:', offers.length);
+      
+      if (!offers || offers.length === 0) {
+        container.innerHTML = `<div class="no-offers">${getTranslation('recrutement_no_offers')}</div>`;
+        return;
+      }
+      
+      container.innerHTML = offers.map(offer => `
+        <div class="offer-card">
+          <div class="offer-header">
+            <h3>${escapeHtml(offer.titre)}</h3>
+            <div class="offer-meta">
+              <span>📍 ${escapeHtml(offer.lieu || getTranslation('recrutement_location'))}</span>
+              <span>📄 ${escapeHtml(offer.type_contrat || getTranslation('recrutement_contract'))}</span>
+            </div>
+          </div>
+          <div class="offer-body">
+            <p>${escapeHtml(offer.description.substring(0, 200))}${offer.description.length > 200 ? '...' : ''}</p>
+          </div>
+          <div class="offer-footer">
+            <span class="offer-deadline">📅 ${offer.date_limite ? `${getTranslation('recrutement_deadline')} ${new Date(offer.date_limite).toLocaleDateString()}` : getTranslation('recrutement_no_deadline')}</span>
+            <a href="/contact.html" class="btn-apply">${getTranslation('recrutement_apply')} →</a>
+          </div>
+        </div>
+      `).join('');
+      
+      // Mettre à jour les textes des titres
+      const whyTitle = document.querySelector('h2[data-i18n="recrutement_why_title"]');
+      if (whyTitle) whyTitle.textContent = getTranslation('recrutement_why_title');
+      
+    } catch (error) {
+      console.error('Erreur:', error);
+      container.innerHTML = `<div class="no-offers">❌ ${getTranslation('error_loading')}</div>`;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM chargé');
+    refreshBanner();
+    loadOffers();
+  });
+</script>
+
+</body>
+</html>

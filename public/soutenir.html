@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAFF | Soutenir</title>
+  <link rel="icon" href="/images/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/header.js"></script>
+  <script defer src="/js/footer.js"></script>
+  <script defer src="/js/i18n.js"></script>
+  <style>
+    .page-hero {
+      padding: 80px 0 48px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #fef9e6 0%, #e9f5ef 100%);
+    }
+
+    .hero-bg-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.15;
+      z-index: 0;
+    }
+
+    .page-hero .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    .lead {
+      color: #2d4a3b;
+      font-size: 1.2rem;
+      max-width: 700px;
+    }
+
+    .section-alt {
+      background: #faf9f6;
+    }
+
+    /* Cartes dons - version flip */
+    .support-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .support-flip-card {
+      background-color: transparent;
+      width: 100%;
+      height: 320px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .support-flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      border-radius: 28px;
+    }
+
+    .support-flip-card:hover .support-flip-inner {
+      transform: rotateY(180deg);
+    }
+
+    /* Face avant */
+    .support-flip-front {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      background: white;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      border: 1px solid #edf2f0;
+    }
+
+    .support-flip-front .card-icon {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+    }
+
+    .support-flip-front h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #0a3528;
+      margin-bottom: 16px;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .support-flip-front p {
+      color: #4a5568;
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    /* Face arrière */
+    .support-flip-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      background: linear-gradient(135deg, #e76f51, #d45a3a);
+      color: white;
+      transform: rotateY(180deg);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .support-flip-back .back-icon {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+
+    .support-flip-back h4 {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      font-family: Georgia, serif;
+    }
+
+    .support-flip-back p {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .support-flip-back .btn-donate {
+      display: inline-block;
+      background: white;
+      color: #e76f51;
+      padding: 10px 25px;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: 0.2s;
+    }
+
+    .support-flip-back .btn-donate:hover {
+      transform: scale(1.05);
+      background: #fef9e6;
+    }
+
+    /* Cartes engagement */
+    .involve-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+
+    .involve-flip-card {
+      background-color: transparent;
+      width: 100%;
+      height: 280px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .involve-flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      border-radius: 28px;
+    }
+
+    .involve-flip-card:hover .involve-flip-inner {
+      transform: rotateY(180deg);
+    }
+
+    .involve-flip-front {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 28px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 32px;
+      background: white;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      border: 1px solid #edf2f0;
+      text-align: left;
+    }
+
+    .involve-flip-front .involve-icon {
+      font-size: 3rem;
+      flex-shrink: 0;
+    }
+
+    .involve-flip-front .involve-content h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #0a3528;
+      margin-bottom: 12px;
+      font-family: Georgia, serif;
+    }
+
+    .involve-flip-front .involve-content p {
+      color: #4a5568;
+      line-height: 1.5;
+      font-size: 0.9rem;
+    }
+
+    .involve-flip-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      background: linear-gradient(135deg, #0a3528, #1a5a45);
+      color: white;
+      transform: rotateY(180deg);
+      text-align: center;
+    }
+
+    .involve-flip-back h4 {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      font-family: Georgia, serif;
+    }
+
+    .involve-flip-back p {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 25px;
+    }
+
+    .involve-flip-back .btn-involve {
+      display: inline-block;
+      background: white;
+      color: #0a3528;
+      padding: 10px 25px;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: 0.2s;
+    }
+
+    .involve-flip-back .btn-involve:hover {
+      transform: scale(1.05);
+      background: #fef9e6;
+    }
+
+    @media (max-width: 900px) {
+      .support-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+      }
+      .involve-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      .involve-flip-card {
+        height: 260px;
+      }
+      .involve-flip-front {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .support-grid {
+        grid-template-columns: 1fr;
+      }
+      .support-flip-card {
+        height: 300px;
+      }
+      .page-hero {
+        padding: 60px 0 32px;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      .lead {
+        font-size: 1rem;
+      }
+      .involve-flip-card {
+        height: auto;
+        min-height: 280px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="header-placeholder"></div>
+
+<main>
+  <section class="page-hero" id="page-hero">
+    <div class="hero-bg-image" id="hero-bg-image"></div>
+    <div class="container">
+      <div class="eyebrow" data-i18n="support_page_eyebrow">Engagement</div>
+      <h1 data-i18n="support_page_title">Soutenir FAFF</h1>
+      <p class="lead" data-i18n="support_page_intro">Dons, bénévolat, mécénat et engagement d'entreprise.</p>
+    </div>
+  </section>
+
+  <section id="don" class="section">
+    <div class="container">
+      <div class="support-grid">
+        
+        <!-- Carte 1 - Dons ponctuels -->
+        <div class="support-flip-card">
+          <div class="support-flip-inner">
+            <div class="support-flip-front">
+              <div class="card-icon">💝</div>
+              <h3 data-i18n="support_card_1_title">Dons ponctuels</h3>
+              <p data-i18n="support_card_1_text">Soutenez un programme ou une activité spécifique.</p>
+            </div>
+            <div class="support-flip-back">
+              <div class="back-icon">🎯</div>
+              <h4>Chaque don compte</h4>
+              <p>Votre soutien ponctuel permet de financer des actions concrètes et de répondre aux besoins immédiats des familles.</p>
+              <a href="/contact.html" class="btn-donate" data-i18n="support_donate_btn">Donner →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Carte 2 - Dons récurrents -->
+        <div class="support-flip-card">
+          <div class="support-flip-inner">
+            <div class="support-flip-front">
+              <div class="card-icon">🔄</div>
+              <h3 data-i18n="support_card_2_title">Dons récurrents</h3>
+              <p data-i18n="support_card_2_text">Contribuez durablement au développement de l'organisme.</p>
+            </div>
+            <div class="support-flip-back">
+              <div class="back-icon">🌱</div>
+              <h4>Un impact durable</h4>
+              <p>Devenez donateur régulier et participez à la stabilité et à la croissance de nos actions auprès des familles.</p>
+              <a href="/contact.html" class="btn-donate" data-i18n="support_subscribe_btn">S'abonner →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Carte 3 - Sécurité et transparence -->
+        <div class="support-flip-card">
+          <div class="support-flip-inner">
+            <div class="support-flip-front">
+              <div class="card-icon">🛡️</div>
+              <h3 data-i18n="support_card_3_title">Sécurité et transparence</h3>
+              <p data-i18n="support_card_3_text">Vos contributions soutiennent directement des actions à impact mesurable.</p>
+            </div>
+            <div class="support-flip-back">
+              <div class="back-icon">📊</div>
+              <h4>100% transparent</h4>
+              <p>Nous publions régulièrement nos rapports d'impact. Chaque euro est tracé et affecté à nos programmes.</p>
+              <a href="/impact.html" class="btn-donate">Voir l'impact →</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="involve-grid">
+        
+        <!-- Carte Bénévole -->
+        <div class="involve-flip-card">
+          <div class="involve-flip-inner">
+            <div class="involve-flip-front">
+              <div class="involve-icon">🙋‍♂️</div>
+              <div class="involve-content">
+                <h3 data-i18n="support_volunteer_title">Devenir bénévole</h3>
+                <p data-i18n="support_volunteer_text">Rejoignez notre réseau de bénévoles pour soutenir les familles et les jeunes.</p>
+              </div>
+            </div>
+            <div class="involve-flip-back">
+              <div class="back-icon">🤝</div>
+              <h4>Donnez de votre temps</h4>
+              <p>Une heure, une journée ou plus. Chaque bénévole fait la différence dans la vie des familles.</p>
+              <a href="/contact.html" class="btn-involve" data-i18n="support_volunteer_btn">S'engager →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Carte Entreprises -->
+        <div class="involve-flip-card">
+          <div class="involve-flip-inner">
+            <div class="involve-flip-front">
+              <div class="involve-icon">🏢</div>
+              <div class="involve-content">
+                <h3 data-i18n="support_corporate_title">Entreprises et fondations</h3>
+                <p data-i18n="support_corporate_text">Mécénat, commandites et responsabilité sociale des entreprises.</p>
+              </div>
+            </div>
+            <div class="involve-flip-back">
+              <div class="back-icon">💼</div>
+              <h4>Partenariat gagnant-gagnant</h4>
+              <p>Associez votre marque à une cause porteuse de sens et bénéficiez d'avantages fiscaux.</p>
+              <a href="/partenaires.html" class="btn-involve" data-i18n="support_partner_btn">Proposer un partenariat →</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-placeholder"></div>
+
+<script>
+  function refreshBanner() {
+    const bannerDiv = document.getElementById('hero-bg-image');
+    if (bannerDiv) {
+      const timestamp = new Date().getTime();
+      bannerDiv.style.backgroundImage = `url('/images/soutenir-banner.png?t=${timestamp}')`;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    refreshBanner();
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) refreshBanner();
+    });
+  });
+</script>
+
+</body>
+</html>

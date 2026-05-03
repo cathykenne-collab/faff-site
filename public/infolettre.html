@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAFF | Infolettre</title>
+  <link rel="icon" href="/images/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/header.js"></script>
+  <script defer src="/js/footer.js"></script>
+  <script defer src="/js/i18n.js"></script>
+</head>
+<body>
+
+<div id="header-placeholder"></div>
+
+<main>
+  <section class="page-hero" id="page-hero">
+    <div class="hero-bg-image" id="hero-bg-image"></div>
+    <div class="container">
+      <div class="eyebrow" data-i18n="newsletter_eyebrow">Communication</div>
+      <h1 data-i18n="newsletter_title">Infolettre FAFF</h1>
+      <p class="lead" data-i18n="newsletter_intro">Recevez les nouvelles, événements et activités de FAFF directement par email.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="newsletter-grid">
+        <div class="newsletter-card">
+          <div class="newsletter-icon">📧</div>
+          <h3 data-i18n="newsletter_form_title">S'inscrire</h3>
+          <form id="newsletter-form">
+            <div class="form-group">
+              <label data-i18n="newsletter_name">Nom complet</label>
+              <input type="text" name="nom" required>
+            </div>
+            <div class="form-group">
+              <label data-i18n="newsletter_email">Email</label>
+              <input type="email" name="email" required>
+            </div>
+            <button type="submit" class="btn btn-primary submit-btn" data-i18n="newsletter_subscribe_btn">S'inscrire</button>
+            <div id="newsletter-message" class="form-feedback"></div>
+          </form>
+        </div>
+
+        <div class="benefits-card">
+          <div class="benefits-icon">✨</div>
+          <h3 data-i18n="newsletter_benefits_title">Pourquoi s'inscrire ?</h3>
+          <ul class="benefits-list">
+            <li><span class="check">✓</span> <span data-i18n="newsletter_benefit_1">Recevoir les événements à venir</span></li>
+            <li><span class="check">✓</span> <span data-i18n="newsletter_benefit_2">Découvrir les activités communautaires</span></li>
+            <li><span class="check">✓</span> <span data-i18n="newsletter_benefit_3">Suivre l'impact de FAFF</span></li>
+            <li><span class="check">✓</span> <span data-i18n="newsletter_benefit_4">Rester connecté à la communauté</span></li>
+            <li><span class="check">✓</span> <span data-i18n="newsletter_benefit_5">Recevoir des conseils et ressources exclusives</span></li>
+          </ul>
+          <div class="note">
+            <span>💚</span>
+            <p data-i18n="newsletter_note">Une infolettre par mois, sans spam. Désinscription facile.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-placeholder"></div>
+
+<style>
+  .page-hero { 
+    padding: 80px 0 48px; 
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #fef9e6 0%, #e9f5ef 100%);
+  }
+
+  .hero-bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.15;
+    z-index: 0;
+  }
+
+  .page-hero .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .lead { 
+    color: #2d4a3b;
+    font-size: 1.2rem;
+    max-width: 700px;
+  }
+
+  .section { padding: 70px 0; }
+  
+  .newsletter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  
+  .newsletter-card, .benefits-card {
+    background: white; border-radius: 28px; padding: 40px 32px;
+    box-shadow: 0 15px 35px -12px rgba(0,0,0,0.08); border: 1px solid #edf2f0;
+    transition: transform 0.3s ease;
+  }
+  .newsletter-card:hover, .benefits-card:hover { transform: translateY(-5px); }
+  
+  .newsletter-icon, .benefits-icon { font-size: 2.5rem; margin-bottom: 20px; }
+  .newsletter-card h3, .benefits-card h3 { font-size: 1.5rem; color: #0a3528; margin-bottom: 24px; font-family: Georgia, serif; }
+  
+  .form-group { margin-bottom: 20px; }
+  .form-group label { display: block; font-weight: 600; margin-bottom: 8px; color: #0a3528; }
+  .form-group input { width: 100%; padding: 14px 16px; border: 1px solid #e2e8f0; border-radius: 14px; font-size: 0.95rem; }
+  .form-group input:focus { outline: none; border-color: #e76f51; box-shadow: 0 0 0 3px rgba(231,111,81,0.1); }
+  
+  .submit-btn { width: 100%; padding: 14px; font-size: 1rem; background: #e76f51; color: white; border: none; cursor: pointer; border-radius: 60px; font-weight: 600; transition: 0.2s; }
+  .submit-btn:hover { background: #d45a3a; transform: translateY(-2px); }
+  
+  .benefits-list { list-style: none; margin-bottom: 28px; }
+  .benefits-list li { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; color: #4a5568; }
+  .check { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; background: #e76f51; color: white; border-radius: 50%; font-size: 0.8rem; font-weight: bold; }
+  
+  .note { background: #fef9e6; border-radius: 16px; padding: 16px; display: flex; align-items: center; gap: 12px; border-left: 4px solid #e76f51; }
+  .note p { color: #4a5568; font-size: 0.85rem; margin: 0; }
+  
+  .form-feedback { margin-top: 20px; padding: 12px; border-radius: 12px; text-align: center; font-weight: 500; display: none; }
+  .form-feedback.success { display: block; background: #e6f7e6; color: #2e7d32; border: 1px solid #c8e6c9; }
+  .form-feedback.error { display: block; background: #fee2e2; color: #c62828; border: 1px solid #ffcdd2; }
+  
+  @media (max-width: 800px) {
+    .newsletter-grid { grid-template-columns: 1fr; }
+    .page-hero { padding: 60px 0 32px; }
+    h1 { font-size: 2rem; }
+    .lead { font-size: 1rem; }
+    .newsletter-card, .benefits-card { padding: 28px 24px; }
+  }
+</style>
+
+<script>
+  // Version corrigée de getTranslation
+  function getTranslation(key) {
+    // Récupérer la langue
+    let lang = 'fr';
+    if (typeof window.currentLang !== 'undefined') {
+      lang = window.currentLang;
+    } else if (localStorage.getItem('faff_lang')) {
+      lang = localStorage.getItem('faff_lang');
+    }
+    
+    // Chercher la traduction
+    if (typeof window.translations !== 'undefined' && window.translations[lang] && window.translations[lang][key]) {
+      return window.translations[lang][key];
+    }
+    
+    // Fallback
+    const fallback = {
+      sending: 'Envoi en cours...',
+      newsletter_success: '✅ Inscription réussie ! Vous recevrez bientôt nos actualités.',
+      newsletter_error: '❌ Erreur lors de l\'inscription. Veuillez réessayer.'
+    };
+    return fallback[key] || key;
+  }
+
+  function refreshBanner() {
+    const bannerDiv = document.getElementById('hero-bg-image');
+    if (bannerDiv) {
+      const timestamp = new Date().getTime();
+      bannerDiv.style.backgroundImage = `url('/images/infolettre-banner.png?t=${timestamp}')`;
+    }
+  }
+
+  // S'assurer que le formulaire existe avant d'ajouter l'écouteur
+  const newsletterForm = document.getElementById('newsletter-form');
+  if (newsletterForm) {
+    newsletterForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      console.log('Formulaire soumis'); // Debug
+      
+      const msgDiv = document.getElementById('newsletter-message');
+      const submitBtn = newsletterForm.querySelector('button[type="submit"]');
+      
+      // Désactiver le bouton pendant l'envoi
+      submitBtn.disabled = true;
+      submitBtn.textContent = getTranslation('sending');
+      
+      msgDiv.textContent = getTranslation('sending');
+      msgDiv.className = 'form-feedback';
+      msgDiv.style.display = 'block';
+      
+      const formData = new FormData(e.target);
+      const data = {
+        nom: formData.get('nom'),
+        email: formData.get('email')
+      };
+      
+      console.log('Données envoyées:', data); // Debug
+      
+      try {
+        const res = await fetch('/api/newsletter', { 
+          method: 'POST', 
+          headers: { 'Content-Type': 'application/json' }, 
+          body: JSON.stringify(data) 
+        });
+        
+        const result = await res.json();
+        console.log('Réponse:', result); // Debug
+        
+        if (res.ok && result.success) {
+          msgDiv.textContent = getTranslation('newsletter_success');
+          msgDiv.className = 'form-feedback success';
+          newsletterForm.reset();
+        } else {
+          msgDiv.textContent = result.error || getTranslation('newsletter_error');
+          msgDiv.className = 'form-feedback error';
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+        msgDiv.textContent = getTranslation('newsletter_error');
+        msgDiv.className = 'form-feedback error';
+      } finally {
+        // Réactiver le bouton
+        submitBtn.disabled = false;
+        submitBtn.textContent = getTranslation('newsletter_subscribe_btn');
+      }
+      
+      setTimeout(() => { 
+        msgDiv.style.display = 'none'; 
+      }, 5000);
+    });
+  } else {
+    console.error('Formulaire newsletter non trouvé');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    refreshBanner();
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) refreshBanner();
+    });
+  });
+</script>
+
+</body>
+</html>

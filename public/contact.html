@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAFF | Contact</title>
+  <link rel="icon" href="/images/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/header.js"></script>
+  <script defer src="/js/footer.js"></script>
+  <script defer src="/js/i18n.js"></script>
+</head>
+<body>
+
+<div id="header-placeholder"></div>
+
+<main>
+  <section class="page-hero" id="page-hero">
+    <div class="hero-bg-image" id="hero-bg-image"></div>
+    <div class="container">
+      <div class="eyebrow" data-i18n="contact_eyebrow">Nous joindre</div>
+      <h1 data-i18n="contact_title">Contact</h1>
+      <p class="lead" data-i18n="contact_intro">Nous joindre, prendre rendez-vous, poser une question.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="contact-grid">
+        <!-- Coordonnées -->
+        <div class="contact-info-card">
+          <div class="info-header">
+            <span class="info-icon">📍</span>
+            <h3 data-i18n="contact_details_title">Coordonnées</h3>
+          </div>
+          <div class="info-list">
+            <div class="info-item">
+              <span class="info-item-icon">✉️</span>
+              <div>
+                <strong data-i18n="contact_email_label">Email</strong>
+                <a href="mailto:contact@faff.ca">contact@faff.ca</a>
+              </div>
+            </div>
+            <div class="info-item">
+              <span class="info-item-icon">📞</span>
+              <div>
+                <strong data-i18n="contact_phone_label">Téléphone</strong>
+                <a href="tel:+10000000000">+1 000 000 0000</a>
+              </div>
+            </div>
+            <div class="info-item">
+              <span class="info-item-icon">🌍</span>
+              <div>
+                <strong data-i18n="contact_area_label">Territoire</strong>
+                <span>Cambridge, Kitchener, Waterloo et région</span>
+              </div>
+            </div>
+          </div>
+          <div class="map-placeholder">
+            <div class="map-icon">🗺️</div>
+            <p data-i18n="contact_map_note">Ajoute ici une carte Google Maps ou une iframe.</p>
+          </div>
+        </div>
+
+        <!-- Formulaire -->
+        <div class="contact-form-card">
+          <div class="form-header">
+            <span class="form-icon">📝</span>
+            <h3 data-i18n="contact_form_title">Formulaire de contact</h3>
+          </div>
+          <form id="contact-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label data-i18n="contact_name_label">Nom</label>
+                <input type="text" name="nom" required>
+              </div>
+              <div class="form-group">
+                <label data-i18n="contact_email_form_label">Email</label>
+                <input type="email" name="email" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label data-i18n="contact_subject_label">Sujet</label>
+              <input type="text" name="sujet">
+            </div>
+            <div class="form-group">
+              <label data-i18n="contact_message_label">Message</label>
+              <textarea name="message" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary submit-btn" data-i18n="contact_send_btn">Envoyer le message</button>
+            <div id="contact-message" class="form-feedback"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-placeholder"></div>
+
+<style>
+  /* ========== STYLES CONTACT ========== */
+  .page-hero {
+    padding: 80px 0 48px;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #fef9e6 0%, #e9f5ef 100%);
+  }
+
+  .hero-bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.15;
+    z-index: 0;
+  }
+
+  .page-hero .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .lead {
+    color: #2d4a3b;
+    font-size: 1.2rem;
+    max-width: 700px;
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+
+  .contact-info-card, .contact-form-card {
+    background: white;
+    border-radius: 28px;
+    padding: 32px;
+    box-shadow: 0 20px 35px -12px rgba(0,0,0,0.08);
+    border: 1px solid #edf2f0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .contact-info-card:hover, .contact-form-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 40px -12px rgba(0,0,0,0.15);
+  }
+
+  .info-header, .form-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e76f51;
+  }
+
+  .info-icon, .form-icon {
+    font-size: 2rem;
+  }
+
+  .info-header h3, .form-header h3 {
+    font-size: 1.5rem;
+    color: #0a3528;
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+  }
+
+  .info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+
+  .info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .info-item-icon {
+    font-size: 1.3rem;
+    min-width: 28px;
+  }
+
+  .info-item strong {
+    display: block;
+    color: #0a3528;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .info-item a, .info-item span {
+    color: #4a5568;
+    text-decoration: none;
+  }
+
+  .info-item a:hover {
+    color: #e76f51;
+  }
+
+  .map-placeholder {
+    background: #f8f9fa;
+    border-radius: 20px;
+    padding: 24px;
+    text-align: center;
+    border: 1px dashed #cbd5e0;
+  }
+
+  .map-icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+  }
+
+  .map-placeholder p {
+    color: #6c757d;
+    font-size: 0.85rem;
+    margin: 0;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #0a3528;
+    font-size: 0.9rem;
+  }
+
+  .form-group input, .form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+  }
+
+  .form-group input:focus, .form-group textarea:focus {
+    outline: none;
+    border-color: #e76f51;
+    box-shadow: 0 0 0 3px rgba(231,111,81,0.1);
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 1rem;
+  }
+
+  .form-feedback {
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 500;
+    display: none;
+  }
+
+  .form-feedback.success {
+    display: block;
+    background: #e6f7e6;
+    color: #2e7d32;
+    border: 1px solid #c8e6c9;
+  }
+
+  .form-feedback.error {
+    display: block;
+    background: #fee2e2;
+    color: #c62828;
+    border: 1px solid #ffcdd2;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 900px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+    }
+    .page-hero {
+      padding: 60px 0 32px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .form-row {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .contact-info-card, .contact-form-card {
+      padding: 24px;
+    }
+  }
+</style>
+
+<script>
+  // Rafraîchir la bannière
+  function refreshBanner() {
+    const bannerDiv = document.getElementById('hero-bg-image');
+    if (bannerDiv) {
+      const timestamp = new Date().getTime();
+      bannerDiv.style.backgroundImage = `url('/images/contact-banner.png?t=${timestamp}')`;
+    }
+  }
+
+  // Fonction pour obtenir une traduction
+  function getTranslation(key) {
+    if (typeof translations !== 'undefined' && typeof currentLang !== 'undefined' && translations[currentLang] && translations[currentLang][key]) {
+      return translations[currentLang][key];
+    }
+    // Fallback
+    const fallback = {
+      sending: 'Envoi en cours...',
+      success: '✅ Message envoyé avec succès !',
+      error: '❌ Erreur lors de l\'envoi du message.',
+      network_error: '❌ Problème de connexion. Vérifiez votre réseau.'
+    };
+    return fallback[key] || key;
+  }
+
+  // Formulaire submission
+  const contactForm = document.getElementById('contact-form');
+  if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const msgDiv = document.getElementById('contact-message');
+      const submitBtn = contactForm.querySelector('button[type="submit"]');
+      
+      // Désactiver le bouton pendant l'envoi
+      submitBtn.disabled = true;
+      submitBtn.textContent = getTranslation('sending');
+      
+      msgDiv.textContent = getTranslation('sending');
+      msgDiv.className = 'form-feedback';
+      msgDiv.style.display = 'block';
+      
+      const formData = new FormData(e.target);
+      const data = {
+        nom: formData.get('nom'),
+        email: formData.get('email'),
+        sujet: formData.get('sujet') || null,
+        message: formData.get('message')
+      };
+      
+      try {
+        const res = await fetch('/api/contacts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        
+        const result = await res.json();
+        
+        if (res.ok && result.success) {
+          msgDiv.textContent = getTranslation('success');
+          msgDiv.className = 'form-feedback success';
+          contactForm.reset();
+        } else {
+          msgDiv.textContent = result.error || getTranslation('error');
+          msgDiv.className = 'form-feedback error';
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+        msgDiv.textContent = getTranslation('network_error');
+        msgDiv.className = 'form-feedback error';
+      } finally {
+        // Réactiver le bouton
+        submitBtn.disabled = false;
+        submitBtn.textContent = getTranslation('contact_send_btn');
+        
+        setTimeout(() => {
+          msgDiv.style.display = 'none';
+        }, 5000);
+      }
+    });
+  }
+
+  // Initialisation
+  document.addEventListener('DOMContentLoaded', () => {
+    refreshBanner();
+    
+    // Rafraîchir quand on revient sur l'onglet
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) refreshBanner();
+    });
+  });
+</script>
+
+</body>
+</html>

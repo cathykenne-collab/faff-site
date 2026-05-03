@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAFF | Politique de confidentialité</title>
+  <link rel="icon" href="/images/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/header.js"></script>
+  <script defer src="/js/footer.js"></script>
+  <script defer src="/js/i18n.js"></script>
+</head>
+<body>
+
+<div id="header-placeholder"></div>
+
+<main>
+  <section class="page-hero" id="page-hero">
+    <div class="hero-bg-image" id="hero-bg-image"></div>
+    <div class="container">
+      <div class="eyebrow" data-i18n="privacy_eyebrow">Confidentialité</div>
+      <h1 data-i18n="privacy_title">Politique de confidentialité</h1>
+      <p class="lead" data-i18n="privacy_intro">
+        Cette politique explique comment FAFF collecte et utilise vos données.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container privacy-content">
+
+      <div class="privacy-card">
+        <h2 data-i18n="privacy_section_1_title">1. Collecte des informations</h2>
+        <p data-i18n="privacy_section_1_text">
+          Nous collectons les informations que vous fournissez volontairement via les formulaires
+          (inscription, contact, infolettre).
+        </p>
+      </div>
+
+      <div class="privacy-card">
+        <h2 data-i18n="privacy_section_2_title">2. Utilisation des données</h2>
+        <p data-i18n="privacy_section_2_text">
+          Les données sont utilisées pour communiquer avec vous, organiser les activités
+          et améliorer nos services.
+        </p>
+      </div>
+
+      <div class="privacy-card">
+        <h2 data-i18n="privacy_section_3_title">3. Protection des données</h2>
+        <p data-i18n="privacy_section_3_text">
+          FAFF met en place des mesures de sécurité pour protéger vos informations.
+        </p>
+      </div>
+
+      <div class="privacy-card">
+        <h2 data-i18n="privacy_section_4_title">4. Partage des données</h2>
+        <p data-i18n="privacy_section_4_text">
+          Vos données ne sont jamais vendues ou partagées sans votre consentement.
+        </p>
+      </div>
+
+      <div class="privacy-card">
+        <h2 data-i18n="privacy_section_5_title">5. Vos droits</h2>
+        <p data-i18n="privacy_section_5_text">
+          Vous pouvez demander l'accès, la modification ou la suppression de vos données.
+        </p>
+      </div>
+
+      <div class="privacy-card">
+        <h2 data-i18n="privacy_section_6_title">6. Contact</h2>
+        <p data-i18n="privacy_section_6_text">
+          Pour toute question, contactez-nous via la <a href="/contact.html">page contact</a>.
+        </p>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<div id="footer-placeholder"></div>
+
+<style>
+  /* Styles spécifiques à privacy.html */
+  .page-hero {
+    padding: 80px 0 48px;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #fef9e6 0%, #e9f5ef 100%);
+  }
+
+  .hero-bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.15;
+    z-index: 0;
+  }
+
+  .page-hero .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .lead {
+    color: #2d4a3b;
+    font-size: 1.2rem;
+    max-width: 700px;
+  }
+
+  .privacy-content {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .privacy-card {
+    background: white;
+    border-radius: 24px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    border: 1px solid #edf2f0;
+    transition: all 0.3s ease;
+  }
+
+  .privacy-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+  }
+
+  .privacy-card h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0a3528;
+    margin-bottom: 16px;
+    font-family: Georgia, "Times New Roman", serif;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e76f51;
+    display: inline-block;
+  }
+
+  .privacy-card p {
+    color: #4a5568;
+    line-height: 1.6;
+    margin-top: 16px;
+  }
+
+  .privacy-card a {
+    color: #e76f51;
+    text-decoration: none;
+  }
+
+  .privacy-card a:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 800px) {
+    .page-hero {
+      padding: 60px 0 32px;
+    }
+    h1 {
+      font-size: 2rem;
+    }
+    .lead {
+      font-size: 1rem;
+    }
+    .privacy-card {
+      padding: 24px;
+    }
+    .privacy-card h2 {
+      font-size: 1.3rem;
+    }
+  }
+</style>
+
+<script>
+  function refreshBanner() {
+    const bannerDiv = document.getElementById('hero-bg-image');
+    if (bannerDiv) {
+      const timestamp = new Date().getTime();
+      bannerDiv.style.backgroundImage = `url('/images/privacy-banner.png?t=${timestamp}')`;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    refreshBanner();
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) refreshBanner();
+    });
+  });
+</script>
+
+</body>
+</html>

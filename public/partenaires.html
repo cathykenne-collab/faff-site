@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAFF | Partenaires</title>
+  <link rel="icon" href="/images/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/header.js"></script>
+  <script defer src="/js/footer.js"></script>
+  <script defer src="/js/i18n.js"></script>
+  <style>
+    /* Styles spécifiques à partenaires.html */
+    .page-hero {
+      padding: 80px 0 48px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #fef9e6 0%, #e9f5ef 100%);
+    }
+
+    .hero-bg-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.15;
+      z-index: 0;
+    }
+
+    .page-hero .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    .lead {
+      color: #2d4a3b;
+      font-size: 1.2rem;
+      max-width: 700px;
+    }
+
+    .section-alt {
+      background: #faf9f6;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 32px;
+      color: #0a3528;
+      text-align: center;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    /* Grille partenaires */
+    .partners-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .partner-flip-card {
+      background-color: transparent;
+      width: 100%;
+      height: 400px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .partner-flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      border-radius: 28px;
+    }
+
+    .partner-flip-card:hover .partner-flip-inner {
+      transform: rotateY(180deg);
+    }
+
+    /* Face avant avec image */
+    .partner-flip-front {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 28px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      border: 1px solid #edf2f0;
+    }
+
+    .partner-flip-front .partner-image {
+      width: 100%;
+      height: 160px;
+      object-fit: contain;
+      background: #f8fafc;
+      padding: 20px;
+    }
+
+    .partner-flip-front .partner-content {
+      padding: 20px;
+      text-align: center;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .partner-flip-front h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #0a3528;
+      margin-bottom: 10px;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .partner-flip-front p {
+      color: #4a5568;
+      line-height: 1.5;
+      font-size: 0.9rem;
+    }
+
+    /* Face arrière */
+    .partner-flip-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      background: linear-gradient(135deg, #e76f51, #d45a3a);
+      color: white;
+      transform: rotateY(180deg);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .partner-flip-back .back-icon {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+
+    .partner-flip-back h4 {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      font-family: Georgia, serif;
+    }
+
+    .partner-flip-back p {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .partner-flip-back .partner-link {
+      display: inline-block;
+      background: white;
+      color: #e76f51;
+      padding: 10px 25px;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: 0.2s;
+    }
+
+    .partner-flip-back .partner-link:hover {
+      transform: scale(1.05);
+      background: #fef9e6;
+    }
+
+    /* Version bilingue */
+    .fr-content, .en-content {
+      transition: all 0.3s ease;
+    }
+    .en-content {
+      display: none;
+    }
+    html[lang="en"] .fr-content {
+      display: none;
+    }
+    html[lang="en"] .en-content {
+      display: block;
+    }
+
+    /* Section reconnaissance */
+    .grant-card {
+      background: white;
+      border-radius: 28px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      border: 1px solid #edf2f0;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .grant-tags {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .grant-tag {
+      background: #e76f51;
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .become-text {
+      max-width: 600px;
+      margin: 0 auto 28px;
+      color: #4a5568;
+      font-size: 1.1rem;
+    }
+
+    .become-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1rem;
+      padding: 14px 32px;
+    }
+
+    @media (max-width: 700px) {
+      .partners-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      .partner-flip-card {
+        height: 380px;
+      }
+      .page-hero {
+        padding: 60px 0 32px;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      .lead {
+        font-size: 1rem;
+      }
+      .partner-flip-front .partner-image {
+        height: 120px;
+      }
+      .section-title {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="header-placeholder"></div>
+
+<main>
+  <section class="page-hero" id="page-hero">
+    <div class="hero-bg-image" id="hero-bg-image"></div>
+    <div class="container">
+      <div class="eyebrow" data-i18n="partners_eyebrow">Collaboration</div>
+      <h1 data-i18n="partners_title">Nos partenaires</h1>
+      <p class="lead" data-i18n="partners_intro">
+        FAFF travaille avec des partenaires engagés pour soutenir les familles et les jeunes.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">
+        <span class="fr-content">Nos soutiens</span>
+        <span class="en-content">Our supporters</span>
+      </h2>
+      <div class="partners-grid">
+
+        <!-- PARTENAIRE 1 - GOUVERNEMENT DU CANADA -->
+        <div class="partner-flip-card">
+          <div class="partner-flip-inner">
+            <div class="partner-flip-front">
+              <img src="/images/canada-gouv-logo.png" alt="Gouvernement du Canada" class="partner-image" onerror="this.src='https://placehold.co/400x150/0a3528/white?text=🍁+Government+of+Canada'">
+              <div class="partner-content">
+                <h3>
+                  <span class="fr-content">Gouvernement du Canada</span>
+                  <span class="en-content">Government of Canada</span>
+                </h3>
+                <p>
+                  <span class="fr-content">Initiative Appuyer les communautés noires du Canada (IACNC)</span>
+                  <span class="en-content">Supporting Black Canadian Communities Initiative (SBCCI)</span>
+                </p>
+              </div>
+            </div>
+            <div class="partner-flip-back">
+              <div class="back-icon">🍁</div>
+              <h4>
+                <span class="fr-content">Subvention IACNC</span>
+                <span class="en-content">SBCCI Grant</span>
+              </h4>
+              <p>
+                <span class="fr-content">Le gouvernement du Canada soutient financièrement FAFF à travers l'initiative Appuyer les communautés noires du Canada.</span>
+                <span class="en-content">The Government of Canada supports FAFF financially through the Supporting Black Canadian Communities Initiative.</span>
+              </p>
+              <a href="https://www.canada.ca" target="_blank" class="partner-link">
+                <span class="fr-content">Site web →</span>
+                <span class="en-content">Website →</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- PARTENAIRE 2 - TROPICANA COMMUNITY SERVICES -->
+        <div class="partner-flip-card">
+          <div class="partner-flip-inner">
+            <div class="partner-flip-front">
+              <img src="/images/tropicana-logo.png" alt="Tropicana Community Services" class="partner-image" onerror="this.src='https://placehold.co/400x150/0f5c3e/white?text=Tropicana'">
+              <div class="partner-content">
+                <h3>Tropicana Community Services</h3>
+                <p>
+                  <span class="fr-content">Organisme partenaire de mise en œuvre</span>
+                  <span class="en-content">Implementation partner organization</span>
+                </p>
+              </div>
+            </div>
+            <div class="partner-flip-back">
+              <div class="back-icon">🤝</div>
+              <h4>
+                <span class="fr-content">Partenaire clé</span>
+                <span class="en-content">Key partner</span>
+              </h4>
+              <p>
+                <span class="fr-content">Tropicana Community Services assure la coordination et le suivi des projets financés par l'initiative SBCCI/IACNC.</span>
+                <span class="en-content">Tropicana Community Services coordinates and monitors projects funded by the SBCCI/IACNC initiative.</span>
+              </p>
+              <a href="https://www.tropicanacommunity.org" target="_blank" class="partner-link">
+                <span class="fr-content">Site web →</span>
+                <span class="en-content">Website →</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION DE RECONNAISSANCE -->
+  <section class="section section-alt">
+    <div class="container text-center">
+      <div class="grant-card">
+        <div class="grant-tags">
+          <span class="grant-tag">#SBCCI</span>
+          <span class="grant-tag">#IACNC</span>
+          <span class="grant-tag">#TropicanaCommunityServices</span>
+          <span class="grant-tag">#ESDC</span>
+        </div>
+        <p style="color: #4a5568;">
+          <span class="fr-content"><strong>Ce projet est soutenu par le gouvernement du Canada et Tropicana Community Services.</strong></span>
+          <span class="en-content"><strong>This project is supported by the Government of Canada and Tropicana Community Services.</strong></span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION DEVENIR PARTENAIRE -->
+  <section class="section">
+    <div class="container text-center">
+      <h2 class="section-title">
+        <span class="fr-content">Devenir partenaire</span>
+        <span class="en-content">Become a partner</span>
+      </h2>
+      <p class="become-text">
+        <span class="fr-content">Vous souhaitez collaborer avec FAFF ? Rejoignez-nous pour soutenir nos actions.</span>
+        <span class="en-content">Would you like to collaborate with FAFF? Join us to support our actions.</span>
+      </p>
+      <a class="btn btn-primary become-btn" href="/contact.html">
+        <span class="fr-content">🤝 Nous contacter</span>
+        <span class="en-content">🤝 Contact us</span>
+      </a>
+    </div>
+  </section>
+</main>
+
+<div id="footer-placeholder"></div>
+
+<script>
+  function refreshBanner() {
+    const bannerDiv = document.getElementById('hero-bg-image');
+    if (bannerDiv) {
+      const timestamp = new Date().getTime();
+      bannerDiv.style.backgroundImage = `url('/images/partenaires-banner.png?t=${timestamp}')`;
+    }
+  }
+
+  function refreshPartnerImages() {
+    const timestamp = new Date().getTime();
+    document.querySelectorAll('.partner-image').forEach(img => {
+      const src = img.getAttribute('src');
+      if (src && src.startsWith('/images/')) {
+        img.src = src.split('?')[0] + `?t=${timestamp}`;
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    refreshBanner();
+    refreshPartnerImages();
+    
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        refreshBanner();
+        refreshPartnerImages();
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

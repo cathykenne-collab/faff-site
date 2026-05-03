@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAFF | À propos</title>
+  <link rel="icon" href="/images/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/header.js"></script>
+  <script defer src="/js/footer.js"></script>
+  <script defer src="/js/i18n.js"></script>
+  <style>
+    /* Styles spécifiques à about.html */
+    .page-hero { 
+      padding: 80px 0 48px; 
+      background: linear-gradient(135deg, #fef9e6 0%, #e9f5ef 100%); 
+      position: relative; 
+      overflow: hidden; 
+    }
+    .hero-bg-image { 
+      position: absolute; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+      background-size: cover; 
+      background-position: center; 
+      background-repeat: no-repeat; 
+      opacity: 0.15; 
+      z-index: 0; 
+    }
+    .page-hero .container { 
+      position: relative; 
+      z-index: 1; 
+    }
+    .lead { 
+      color: #2d4a3b; 
+      font-size: 1.2rem; 
+      max-width: 700px; 
+      margin-top: 16px; 
+    }
+    .section-alt { 
+      background: #faf9f6; 
+    }
+    .reveal { 
+      animation: fadeInUp 0.8s ease-out; 
+    }
+    @keyframes fadeInUp { 
+      from { opacity: 0; transform: translateY(30px); } 
+      to { opacity: 1; transform: translateY(0); } 
+    }
+
+    /* Grille pour les cartes flip */
+    .grid-flip {
+      display: grid;
+      gap: 32px;
+    }
+    .grid-flip-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .grid-flip-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Cartes flip génériques */
+    .flip-card {
+      background-color: transparent;
+      width: 100%;
+      height: 320px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      border-radius: 24px;
+    }
+
+    .flip-card:hover .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    /* Face avant */
+    .flip-front {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      background: white;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      border: 1px solid #edf2f0;
+    }
+
+    .flip-front .front-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+
+    .flip-front h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0a3528;
+      margin-bottom: 16px;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .flip-front p {
+      color: #4a5568;
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    /* Face arrière */
+    .flip-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      background: linear-gradient(135deg, #e76f51, #d45a3a);
+      color: white;
+      transform: rotateY(180deg);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .flip-back .back-icon {
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+
+    .flip-back h4 {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      font-family: Georgia, serif;
+    }
+
+    .flip-back p {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .flip-back .btn-link {
+      display: inline-block;
+      background: white;
+      color: #e76f51;
+      padding: 8px 20px;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.8rem;
+      transition: 0.2s;
+    }
+
+    .flip-back .btn-link:hover {
+      transform: scale(1.05);
+      background: #fef9e6;
+    }
+
+    /* Section split (qui sommes-nous) */
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .panel {
+      background: #f8f9fa;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+    }
+    .panel img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      min-height: 300px;
+    }
+
+    /* Style pour la section recrutement */
+    .recruitment-banner {
+      background: linear-gradient(135deg, #0a3528, #1a5a45);
+      border-radius: 28px;
+      padding: 40px;
+      text-align: center;
+      color: white;
+      margin: 40px 0;
+    }
+    .recruitment-banner h3 {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      font-family: Georgia, serif;
+    }
+    .recruitment-banner p {
+      margin-bottom: 25px;
+      font-size: 1rem;
+    }
+    .recruitment-btn {
+      background: #e76f51;
+      color: white;
+      padding: 12px 30px;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.2s;
+      display: inline-block;
+    }
+    .recruitment-btn:hover {
+      background: #d45a3a;
+      transform: translateY(-2px);
+    }
+
+    /* Style pour la galerie des membres */
+    .members-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+      margin-top: 30px;
+    }
+    .member-card {
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+    }
+    .member-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    .member-photo {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+    }
+    .member-info {
+      padding: 20px;
+    }
+    .member-info h3 {
+      font-size: 1.2rem;
+      color: #0a3528;
+      margin-bottom: 5px;
+      font-family: Georgia, serif;
+    }
+    .member-info .role {
+      color: #e76f51;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+    .member-info .description {
+      color: #4a5568;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+    .loading-spinner {
+      text-align: center;
+      padding: 60px;
+    }
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #edf2f0;
+      border-top-color: #e76f51;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 1000px) {
+      .members-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .grid-flip-3 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 800px) {
+      .split {
+        grid-template-columns: 1fr;
+      }
+      .grid-flip-3, .grid-flip-2 {
+        grid-template-columns: 1fr;
+      }
+      .members-grid {
+        grid-template-columns: 1fr;
+      }
+      .page-hero {
+        padding: 60px 0 32px;
+      }
+      .flip-card {
+        height: 300px;
+      }
+      .flip-front h3 {
+        font-size: 1.2rem;
+      }
+      .flip-front p {
+        font-size: 0.85rem;
+      }
+      .recruitment-banner {
+        padding: 25px;
+      }
+      .recruitment-banner h3 {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="header-placeholder"></div>
+
+<main>
+  <section class="page-hero" id="page-hero">
+    <div class="hero-bg-image" id="hero-bg-image"></div>
+    <div class="container">
+      <div class="eyebrow" data-i18n="about_eyebrow">Organisation</div>
+      <h1 data-i18n="about_title">À propos de FAFF</h1>
+      <p class="lead" data-i18n="about_intro">Histoire, mission, vision, valeurs, gouvernance et documents institutionnels.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container split reveal">
+      <div>
+        <h2 data-i18n="about_who_title">Qui sommes-nous</h2>
+        <p data-i18n="about_who_text_1">FAFF est un organisme communautaire francophone en Ontario qui accompagne les familles afro francophones dans leur parcours d'épanouissement, d'intégration et de transmission culturelle.</p>
+        <p data-i18n="about_who_text_2">Notre territoire d'intervention couvre Cambridge, Kitchener, Waterloo et la région.</p>
+      </div>
+      <div class="panel">
+        <img id="about-img" src="/images/about.png" alt="FAFF communauté" onerror="this.src='https://placehold.co/600x400/0f5c3e/ffffff?text=FAFF+Communauté'">
+      </div>
+    </div>
+  </section>
+
+  <!-- BANNIÈRE RECRUTEMENT -->
+  <section class="section">
+    <div class="container">
+      <div class="recruitment-banner">
+        <h3>📢 Rejoignez notre équipe !</h3>
+        <p>Nous recherchons des talents motivés pour accompagner nos familles et participer à notre mission.</p>
+        <a href="/recrutement.html" class="recruitment-btn">Voir nos offres d'emploi →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container reveal">
+      <h2 data-i18n="about_mvv_title">Mission, vision et valeurs</h2>
+      <div class="grid-flip grid-flip-3">
+        
+        <!-- Carte Mission -->
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-front">
+              <div class="front-icon">🎯</div>
+              <h3 data-i18n="about_mission_title">Mission</h3>
+              <p data-i18n="about_mission_text">Renforcer les familles afro francophones par la construction identitaire, la valorisation parentale, le leadership jeunesse et l'intégration communautaire.</p>
+            </div>
+            <div class="flip-back">
+              <div class="back-icon">⭐</div>
+              <h4>Notre engagement</h4>
+              <p>Chaque action que nous menons vise à donner aux familles les clés pour s'épanouir et contribuer activement à la société.</p>
+              <a href="/programmes.html" class="btn-link">Découvrir nos actions →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Carte Vision -->
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-front">
+              <div class="front-icon">👁️</div>
+              <h3 data-i18n="about_vision_title">Vision</h3>
+              <p data-i18n="about_vision_text">Une communauté afro francophone forte, stable et engagée.</p>
+            </div>
+            <div class="flip-back">
+              <div class="back-icon">🌍</div>
+              <h4>L'avenir que nous construisons</h4>
+              <p>Une société inclusive où chaque famille afro francophone trouve sa place et contribue au vivre-ensemble.</p>
+              <a href="/impact.html" class="btn-link">Voir notre impact →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Carte Valeurs -->
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-front">
+              <div class="front-icon">💎</div>
+              <h3 data-i18n="about_values_title">Valeurs</h3>
+              <p data-i18n="about_values_text">Identité, Inclusion, Responsabilité, Transmission, Leadership, Collaboration.</p>
+            </div>
+            <div class="flip-back">
+              <div class="back-icon">🤝</div>
+              <h4>Nos principes fondateurs</h4>
+              <p>Ces valeurs guident chacune de nos actions et nos relations avec les familles, les partenaires et la communauté.</p>
+              <a href="/contact.html" class="btn-link">Nous rencontrer →</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION MEMBRES DE LA COMMUNAUTÉ (DYNAMIQUE) -->
+  <section class="section">
+    <div class="container reveal">
+      <h2 data-i18n="about_members_title">👥 Nos membres engagés</h2>
+      <p style="text-align: center; margin-bottom: 40px; color: #4a5568;" data-i18n="about_members_intro">Découvrez les visages qui font vivre FAFF au quotidien.</p>
+      <div id="about-members-grid" class="members-grid">
+        <div class="loading-spinner">
+          <div class="spinner"></div>
+          <p data-i18n="loading_members">Chargement des membres...</p>
+        </div>
+      </div>
+      <div style="text-align: center; margin-top: 30px;">
+        <a href="/membres.html" class="btn btn-outline" data-i18n="about_view_all_members">Voir tous les membres →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container reveal">
+      <h2 data-i18n="about_governance_title">Gouvernance</h2>
+      <div class="grid-flip grid-flip-2">
+        
+        <!-- Carte Équipe permanente -->
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-front">
+              <div class="front-icon">👥</div>
+              <h3 data-i18n="about_team_title">Équipe permanente</h3>
+              <p data-i18n="about_team_text">Coordination, animation, partenariats, mobilisation communautaire et soutien aux familles.</p>
+            </div>
+            <div class="flip-back">
+              <div class="back-icon">💼</div>
+              <h4>Une équipe dévouée</h4>
+              <p>Des professionnels passionnés qui travaillent quotidiennement au service des familles et de la communauté.</p>
+              <a href="/contact.html" class="btn-link">Nous contacter →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Carte Conseil d'administration -->
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-front">
+              <div class="front-icon">🏛️</div>
+              <h3 data-i18n="about_board_title">Conseil d'administration</h3>
+              <p data-i18n="about_board_text">Des leaders engagés qui veillent à l'orientation stratégique, à la bonne gouvernance et à la pérennité de l'organisme.</p>
+            </div>
+            <div class="flip-back">
+              <div class="back-icon">📊</div>
+              <h4>Une gouvernance exemplaire</h4>
+              <p>Notre CA est composé de personnalités issues de divers horizons, unies par la même passion pour notre mission.</p>
+              <a href="/partenaires.html" class="btn-link">Nos partenaires →</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-placeholder"></div>
+
+<script>
+  // ========== BANNIÈRE ET IMAGES ==========
+  function refreshBannerAndImages() {
+    const timestamp = new Date().getTime();
+    const bannerDiv = document.getElementById('hero-bg-image');
+    if (bannerDiv) {
+      bannerDiv.style.backgroundImage = `url('/images/about-banner.png?t=${timestamp}')`;
+    }
+    const aboutImg = document.getElementById('about-img');
+    if (aboutImg) {
+      aboutImg.src = `/images/about.png?t=${timestamp}`;
+    }
+  }
+
+  // ========== CHARGEMENT DES MEMBRES ==========
+  function getTranslation(key) {
+    if (typeof translations !== 'undefined' && translations[currentLang] && translations[currentLang][key]) {
+      return translations[currentLang][key];
+    }
+    return key;
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+
+  async function loadAboutMembers() {
+    const container = document.getElementById('about-members-grid');
+    if (!container) return;
+    
+    const lang = typeof currentLang !== 'undefined' ? currentLang : (localStorage.getItem('faff_lang') || 'fr');
+    
+    try {
+      const response = await fetch('/api/membres');
+      const membres = await response.json();
+      
+      // Filtrer pour n'afficher que les membres actifs et limiter à 4 sur la page d'accueil
+      const activeMembers = membres.filter(m => m.is_active === 1).slice(0, 4);
+      
+      if (!activeMembers.length) {
+        container.innerHTML = `<div class="empty-message">${getTranslation('membres_no_members')}</div>`;
+        return;
+      }
+      
+      container.innerHTML = activeMembers.map(m => `
+        <div class="member-card">
+          ${m.photo ? `<img src="${escapeHtml(m.photo)}?t=${Date.now()}" alt="${escapeHtml(m.prenom)} ${escapeHtml(m.nom)}" class="member-photo" onerror="this.src='https://placehold.co/300x250/0f5c3e/white?text=Photo'">` : '<div style="height: 250px; background: #0a3528; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white;">👤</div>'}
+          <div class="member-info">
+            <h3>${escapeHtml(m.prenom)} ${escapeHtml(m.nom)}</h3>
+            <div class="role">${escapeHtml(m.role)}</div>
+            ${m.description ? `<div class="description">${escapeHtml(m.description)}</div>` : ''}
+          </div>
+        </div>
+      `).join('');
+      
+    } catch (error) {
+      console.error('Erreur chargement membres:', error);
+      container.innerHTML = `<div class="empty-message">❌ ${getTranslation('error_loading')}</div>`;
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    refreshBannerAndImages();
+    loadAboutMembers();
+    
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        refreshBannerAndImages();
+        loadAboutMembers();
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

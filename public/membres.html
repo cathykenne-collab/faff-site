@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAFF | Nos membres</title>
+  <link rel="icon" href="/images/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/header.js"></script>
+  <script defer src="/js/footer.js"></script>
+  <script defer src="/js/i18n.js"></script>
+  <style>
+    .members-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+      margin-top: 40px;
+    }
+    .member-card {
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+    }
+    .member-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    .member-photo {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+    }
+    .member-info {
+      padding: 20px;
+    }
+    .member-info h3 {
+      font-size: 1.2rem;
+      color: #0a3528;
+      margin-bottom: 5px;
+      font-family: Georgia, serif;
+    }
+    .member-info .role {
+      color: #e76f51;
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-bottom: 10px;
+    }
+    .member-info .description {
+      color: #4a5568;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    .category-section {
+      margin-bottom: 50px;
+    }
+    .category-title {
+      font-size: 1.8rem;
+      color: #0a3528;
+      margin-bottom: 25px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e76f51;
+      display: inline-block;
+      font-family: Georgia, serif;
+    }
+    .loading-spinner {
+      text-align: center;
+      padding: 60px;
+    }
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #edf2f0;
+      border-top-color: #e76f51;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    @media (max-width: 1000px) {
+      .members-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 600px) {
+      .members-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="header-placeholder"></div>
+
+<main>
+  <section class="page-hero" id="page-hero">
+    <div class="hero-bg-image" id="hero-bg-image"></div>
+    <div class="container">
+      <div class="eyebrow" data-i18n="membres_eyebrow">Notre équipe</div>
+      <h1 data-i18n="membres_title">Les membres de FAFF</h1>
+      <p class="lead" data-i18n="membres_intro">Découvrez les visages et les talents qui font vivre notre association au quotidien.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container" id="members-container">
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p data-i18n="membres_loading">Chargement des membres...</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-placeholder"></div>
+
+<script>
+  function refreshBanner() {
+    const bannerDiv = document.getElementById('hero-bg-image');
+    if (bannerDiv) {
+      const timestamp = new Date().getTime();
+      bannerDiv.style.backgroundImage = `url('/images/membres-banner.png?t=${timestamp}')`;
+    }
+  }
+
+  function getTranslation(key) {
+    if (typeof translations !== 'undefined' && translations[currentLang] && translations[currentLang][key]) {
+      return translations[currentLang][key];
+    }
+    return key;
+  }
+
+  function getCategoryName(cat, lang) {
+    const categoryNames = {
+      fr: {
+        'equipe': '👥 Équipe permanente',
+        'ca': '🏛️ Conseil d\'administration',
+        'benevole': '🙋 Bénévoles',
+        'ambassadeur': '⭐ Ambassadeurs'
+      },
+      en: {
+        'equipe': '👥 Permanent team',
+        'ca': '🏛️ Board of Directors',
+        'benevole': '🙋 Volunteers',
+        'ambassadeur': '⭐ Ambassadors'
+      }
+    };
+    return categoryNames[lang]?.[cat] || cat;
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+
+  async function loadMembres() {
+    const container = document.getElementById('members-container');
+    const lang = typeof currentLang !== 'undefined' ? currentLang : (localStorage.getItem('faff_lang') || 'fr');
+    
+    try {
+      const response = await fetch('/api/membres');
+      const membres = await response.json();
+      
+      if (!membres.length) {
+        container.innerHTML = `<div class="empty-message">${getTranslation('membres_no_members')}</div>`;
+        return;
+      }
+      
+      // Grouper par catégorie
+      const grouped = {};
+      membres.forEach(m => {
+        if (!grouped[m.categorie]) grouped[m.categorie] = [];
+        grouped[m.categorie].push(m);
+      });
+      
+      let html = '';
+      for (const [cat, members] of Object.entries(grouped)) {
+        html += `
+          <div class="category-section">
+            <h2 class="category-title">${getCategoryName(cat, lang)}</h2>
+            <div class="members-grid">
+              ${members.map(m => `
+                <div class="member-card">
+                  ${m.photo ? `<img src="${escapeHtml(m.photo)}?t=${Date.now()}" alt="${escapeHtml(m.prenom)} ${escapeHtml(m.nom)}" class="member-photo" onerror="this.src='https://placehold.co/300x250/0f5c3e/white?text=Photo'">` : '<div style="height: 250px; background: #0a3528; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white;">👤</div>'}
+                  <div class="member-info">
+                    <h3>${escapeHtml(m.prenom)} ${escapeHtml(m.nom)}</h3>
+                    <div class="role">${escapeHtml(m.role)}</div>
+                    ${m.description ? `<div class="description">${escapeHtml(m.description)}</div>` : ''}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+      container.innerHTML = html;
+    } catch (error) {
+      console.error('Erreur:', error);
+      container.innerHTML = `<div class="empty-message">❌ ${getTranslation('error_loading')}</div>`;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    refreshBanner();
+    loadMembres();
+  });
+</script>
+
+</body>
+</html>

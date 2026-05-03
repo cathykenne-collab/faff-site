@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAFF | Plan du site</title>
+  <link rel="icon" href="/images/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/header.js"></script>
+  <script defer src="/js/footer.js"></script>
+  <script defer src="/js/i18n.js"></script>
+</head>
+<body>
+
+<div id="header-placeholder"></div>
+
+<main>
+  <section class="page-hero" id="page-hero">
+    <div class="hero-bg-image" id="hero-bg-image"></div>
+    <div class="container">
+      <div class="eyebrow" data-i18n="sitemap_eyebrow">Navigation</div>
+      <h1 data-i18n="sitemap_title">Plan du site</h1>
+      <p class="lead" data-i18n="sitemap_intro">Retrouvez toutes les pages du site FAFF.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="sitemap-grid">
+        <div class="sitemap-card">
+          <h3>📄 Pages principales</h3>
+          <ul>
+            <li><a href="/index.html">🏠 Accueil</a></li>
+            <li><a href="/about.html">👥 À propos</a></li>
+            <li><a href="/programmes.html">📚 Programmes</a></li>
+            <li><a href="/impact.html">📊 Impact</a></li>
+            <li><a href="/evenements.html">📅 Événements</a></li>
+            <li><a href="/soutenir.html">🤝 Soutenir</a></li>
+            <li><a href="/infolettre.html">📧 Infolettre</a></li>
+            <li><a href="/contact.html">📞 Contact</a></li>
+            <li><a href="/inscription.html">📝 Inscription</a></li>
+          </ul>
+        </div>
+
+        <div class="sitemap-card">
+          <h3>⚖️ Informations légales</h3>
+          <ul>
+            <li><a href="/terms.html">📜 Conditions d'utilisation</a></li>
+            <li><a href="/privacy.html">🔒 Confidentialité</a></li>
+            <li><a href="/accessibilite.html">♿ Accessibilité</a></li>
+          </ul>
+        </div>
+
+        <div class="sitemap-card">
+          <h3>🤝 Partenaires & soutien</h3>
+          <ul>
+            <li><a href="/partenaires.html">🤝 Partenaires</a></li>
+            <li><a href="/soutenir.html#don">💝 Faire un don</a></li>
+            <li><a href="/soutenir.html#volunteer">🙋 Devenir bénévole</a></li>
+          </ul>
+        </div>
+
+        <div class="sitemap-card">
+          <h3>🔗 Liens rapides</h3>
+          <ul>
+            <li><a href="/inscription.html">📝 S'inscrire à un programme</a></li>
+            <li><a href="/contact.html">✉️ Nous contacter</a></li>
+            <li><a href="/sitemap.html">🗺️ Plan du site</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-placeholder"></div>
+
+<style>
+  .page-hero {
+    padding: 80px 0 48px;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #fef9e6 0%, #e9f5ef 100%);
+  }
+
+  .hero-bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.15;
+    z-index: 0;
+  }
+
+  .page-hero .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .lead {
+    color: #2d4a3b;
+    font-size: 1.2rem;
+    max-width: 700px;
+  }
+
+  .sitemap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 32px;
+  }
+
+  .sitemap-card {
+    background: white;
+    border-radius: 28px;
+    padding: 32px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border: 1px solid #edf2f0;
+    transition: all 0.3s ease;
+  }
+
+  .sitemap-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px -12px rgba(0,0,0,0.15);
+  }
+
+  .sitemap-card h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #0a3528;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e76f51;
+    font-family: Georgia, "Times New Roman", serif;
+  }
+
+  .sitemap-card ul {
+    list-style: none;
+  }
+
+  .sitemap-card li {
+    margin-bottom: 12px;
+  }
+
+  .sitemap-card a {
+    text-decoration: none;
+    color: #4a5568;
+    transition: color 0.2s;
+    display: block;
+    padding: 6px 0;
+  }
+
+  .sitemap-card a:hover {
+    color: #e76f51;
+  }
+
+  @media (max-width: 800px) {
+    .page-hero {
+      padding: 60px 0 32px;
+    }
+    h1 {
+      font-size: 2rem;
+    }
+    .lead {
+      font-size: 1rem;
+    }
+    .sitemap-card {
+      padding: 24px;
+    }
+  }
+</style>
+
+<script>
+  function refreshBanner() {
+    const bannerDiv = document.getElementById('hero-bg-image');
+    if (bannerDiv) {
+      const timestamp = new Date().getTime();
+      bannerDiv.style.backgroundImage = `url('/images/sitemap-banner.png?t=${timestamp}')`;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    refreshBanner();
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) refreshBanner();
+    });
+  });
+</script>
+
+</body>
+</html>

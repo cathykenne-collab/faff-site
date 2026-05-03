@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAFF | Accessibilité</title>
+  <link rel="icon" href="/images/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/header.js"></script>
+  <script defer src="/js/footer.js"></script>
+  <script defer src="/js/i18n.js"></script>
+</head>
+<body>
+
+<div id="header-placeholder"></div>
+
+<main>
+  <section class="page-hero" id="page-hero">
+    <div class="hero-bg-image" id="hero-bg-image"></div>
+    <div class="container">
+      <div class="eyebrow" data-i18n="access_eyebrow">Inclusion</div>
+      <h1 data-i18n="access_title">Accessibilité</h1>
+      <p class="lead" data-i18n="access_intro">
+        FAFF souhaite rendre son site accessible au plus grand nombre.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container accessibility-content">
+
+      <div class="access-card">
+        <h2 data-i18n="access_section_1_title">1. Notre engagement</h2>
+        <p data-i18n="access_section_1_text">
+          Nous travaillons à offrir une expérience simple, claire et utilisable pour toutes les personnes.
+        </p>
+      </div>
+
+      <div class="access-card">
+        <h2 data-i18n="access_section_2_title">2. Navigation</h2>
+        <p data-i18n="access_section_2_text">
+          Le site est conçu avec une structure claire, des titres lisibles et une navigation cohérente.
+        </p>
+      </div>
+
+      <div class="access-card">
+        <h2 data-i18n="access_section_3_title">3. Améliorations continues</h2>
+        <p data-i18n="access_section_3_text">
+          Nous améliorons progressivement le contraste, la lisibilité, les formulaires et les contenus.
+        </p>
+      </div>
+
+      <div class="access-card">
+        <h2 data-i18n="access_section_4_title">4. Nous contacter</h2>
+        <p data-i18n="access_section_4_text">
+          Si vous rencontrez une difficulté d'accès, contactez-nous afin que nous puissions vous accompagner.
+        </p>
+      </div>
+
+      <div class="text-center">
+        <a class="btn btn-primary access-btn" href="/contact.html" data-i18n="access_cta">
+          📞 Nous contacter
+        </a>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<div id="footer-placeholder"></div>
+
+<script>
+  // ========== BANNIÈRE POUR CETTE PAGE ==========
+  function refreshPageBanner() {
+    const timestamp = new Date().getTime();
+    const bannerDiv = document.getElementById('hero-bg-image');
+    if (bannerDiv) {
+      bannerDiv.style.backgroundImage = `url('/images/accessibilite-banner.png?t=${timestamp}')`;
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    refreshPageBanner();
+    
+    // Rafraîchir quand on revient sur l'onglet
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) refreshPageBanner();
+    });
+  });
+</script>
+
+<style>
+  /* Styles spécifiques à la page accessibilité */
+  .page-hero {
+    padding: 80px 0 48px;
+    background: linear-gradient(135deg, #fef9e6 0%, #e9f5ef 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.15;
+    z-index: 0;
+  }
+
+  .page-hero .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .lead {
+    color: #2d4a3b;
+    font-size: 1.2rem;
+    max-width: 700px;
+    margin-top: 16px;
+  }
+
+  .accessibility-content {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .access-card {
+    background: white;
+    border-radius: 24px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    border: 1px solid #edf2f0;
+    transition: all 0.3s ease;
+  }
+
+  .access-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+  }
+
+  .access-card h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0a3528;
+    margin-bottom: 16px;
+    font-family: Georgia, "Times New Roman", serif;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e76f51;
+    display: inline-block;
+  }
+
+  .access-card p {
+    color: #4a5568;
+    line-height: 1.6;
+    margin-top: 16px;
+  }
+
+  .access-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    padding: 14px 32px;
+    margin-top: 20px;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  @media (max-width: 800px) {
+    .page-hero {
+      padding: 60px 0 32px;
+    }
+    .lead {
+      font-size: 1rem;
+    }
+    .access-card {
+      padding: 24px;
+    }
+    .access-card h2 {
+      font-size: 1.3rem;
+    }
+  }
+</style>
+
+</body>
+</html>

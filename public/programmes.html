@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAFF | Programmes</title>
+  <link rel="icon" href="/images/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/header.js"></script>
+  <script defer src="/js/footer.js"></script>
+  <script defer src="/js/i18n.js"></script>
+  <style>
+    /* Styles spécifiques à programmes.html */
+    .page-hero {
+      padding: 80px 0 48px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #fef9e6 0%, #e9f5ef 100%);
+    }
+
+    .hero-bg-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.15;
+      z-index: 0;
+    }
+
+    .page-hero .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    .lead {
+      color: #2d4a3b;
+      font-size: 1.2rem;
+      max-width: 700px;
+    }
+
+    /* Grille programmes - cartes flip */
+    .programs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+    }
+
+    .program-flip-card {
+      background-color: transparent;
+      width: 100%;
+      height: 380px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .program-flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      border-radius: 20px;
+    }
+
+    .program-flip-card:hover .program-flip-inner {
+      transform: rotateY(180deg);
+    }
+
+    /* Face avant avec image */
+    .program-flip-front {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .program-flip-front .program-image {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .program-flip-front .program-content {
+      padding: 20px;
+      text-align: center;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .program-flip-front .program-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .program-flip-front h3 {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      color: #0a3528;
+      font-family: Georgia, serif;
+    }
+
+    .program-flip-front p {
+      font-size: 0.85rem;
+      line-height: 1.4;
+      color: #4a5568;
+      margin-bottom: 0;
+    }
+
+    /* Face arrière */
+    .program-flip-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      background: linear-gradient(135deg, #e76f51, #d45a3a);
+      color: white;
+      transform: rotateY(180deg);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .program-flip-back .back-icon {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+
+    .program-flip-back h4 {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      font-family: Georgia, serif;
+    }
+
+    .program-flip-back p {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .program-flip-back .program-btn {
+      display: inline-block;
+      background: white;
+      color: #e76f51;
+      padding: 10px 25px;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: 0.2s;
+    }
+
+    .program-flip-back .program-btn:hover {
+      transform: scale(1.05);
+      background: #fef9e6;
+    }
+
+    @media (max-width: 900px) {
+      .programs-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .programs-grid {
+        grid-template-columns: 1fr;
+      }
+      .page-hero {
+        padding: 60px 0 32px;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      .lead {
+        font-size: 1rem;
+      }
+      .program-flip-card {
+        height: 350px;
+      }
+      .program-flip-front .program-image {
+        height: 150px;
+      }
+      .program-flip-front h3 {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="header-placeholder"></div>
+
+<main>
+  <section class="page-hero" id="page-hero">
+    <div class="hero-bg-image" id="hero-bg-image"></div>
+    <div class="container">
+      <div class="eyebrow" data-i18n="programs_eyebrow">Actions</div>
+      <h1 data-i18n="programs_title">Nos programmes</h1>
+      <p class="lead" data-i18n="programs_intro">
+        Des initiatives concrètes pour accompagner les familles et les jeunes.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="programs-grid" id="programs-grid">
+        <!-- Programme 1 - Renforcement des liens familiaux -->
+        <div class="program-flip-card">
+          <div class="program-flip-inner">
+            <div class="program-flip-front">
+              <img src="/images/family.png" alt="Renforcement familial" class="program-image" onerror="this.src='https://placehold.co/400x200/0f5c3e/white?text=Famille'">
+              <div class="program-content">
+                <div class="program-icon">👨‍👩‍👧‍👦</div>
+                <h3 data-i18n="program_1_title">Renforcement des liens familiaux</h3>
+                <p data-i18n="program_1_text">Ateliers, accompagnement parental et soutien aux familles.</p>
+              </div>
+            </div>
+            <div class="program-flip-back">
+              <div class="back-icon">💚</div>
+              <h4>En savoir plus</h4>
+              <p>Ateliers parentaux, médiation familiale, soutien psychologique et accompagnement personnalisé pour chaque famille.</p>
+              <a href="/inscription.html" class="program-btn" data-i18n="program_cta">Participer →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Programme 2 - Repère des Pères -->
+        <div class="program-flip-card">
+          <div class="program-flip-inner">
+            <div class="program-flip-front">
+              <img src="/images/fathers.png" alt="Repère des Pères" class="program-image" onerror="this.src='https://placehold.co/400x200/0f5c3e/white?text=Pères'">
+              <div class="program-content">
+                <div class="program-icon">👨‍👦</div>
+                <h3 data-i18n="program_2_title">Repère des Pères</h3>
+                <p data-i18n="program_2_text">Espace d'échange et de valorisation du rôle paternel.</p>
+              </div>
+            </div>
+            <div class="program-flip-back">
+              <div class="back-icon">💪</div>
+              <h4>En savoir plus</h4>
+              <p>Renforcement du rôle paternel, ateliers d'échange, soutien à la parentalité et développement de compétences éducatives.</p>
+              <a href="/inscription.html" class="program-btn" data-i18n="program_cta">Participer →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Programme 3 - Mamans & Savoirs -->
+        <div class="program-flip-card">
+          <div class="program-flip-inner">
+            <div class="program-flip-front">
+              <img src="/images/mothers.png" alt="Mamans & Savoirs" class="program-image" onerror="this.src='https://placehold.co/400x200/0f5c3e/white?text=Mamans'">
+              <div class="program-content">
+                <div class="program-icon">👩‍👧‍👦</div>
+                <h3 data-i18n="program_3_title">Mamans & Savoirs</h3>
+                <p data-i18n="program_3_text">Renforcement des compétences et soutien aux mères.</p>
+              </div>
+            </div>
+            <div class="program-flip-back">
+              <div class="back-icon">🌿</div>
+              <h4>En savoir plus</h4>
+              <p>Développement des compétences parentales, partage d'expériences, ateliers thématiques et soutien personnalisé.</p>
+              <a href="/inscription.html" class="program-btn" data-i18n="program_cta">Participer →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Programme 4 - Football en Français -->
+        <div class="program-flip-card">
+          <div class="program-flip-inner">
+            <div class="program-flip-front">
+              <img src="/images/football.png" alt="Football en Français" class="program-image" onerror="this.src='https://placehold.co/400x200/0f5c3e/white?text=Football'">
+              <div class="program-content">
+                <div class="program-icon">⚽</div>
+                <h3 data-i18n="program_4_title">Football en Français</h3>
+                <p data-i18n="program_4_text">Sport, intégration et francophonie pour les jeunes.</p>
+              </div>
+            </div>
+            <div class="program-flip-back">
+              <div class="back-icon">🏆</div>
+              <h4>En savoir plus</h4>
+              <p>Activités sportives, apprentissage du français par le sport, développement de l'esprit d'équipe et de la confiance.</p>
+              <a href="/inscription.html" class="program-btn" data-i18n="program_cta">Participer →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Programme 5 - Franc'Ô Talent -->
+        <div class="program-flip-card">
+          <div class="program-flip-inner">
+            <div class="program-flip-front">
+              <img src="/images/francotalent.png" alt="Franc'Ô Talent" class="program-image" onerror="this.src='https://placehold.co/400x200/0f5c3e/white?text=Talent'">
+              <div class="program-content">
+                <div class="program-icon">🎭</div>
+                <h3 data-i18n="program_5_title">Franc'Ô Talent</h3>
+                <p data-i18n="program_5_text">Expression artistique et leadership jeunesse.</p>
+              </div>
+            </div>
+            <div class="program-flip-back">
+              <div class="back-icon">⭐</div>
+              <h4>En savoir plus</h4>
+              <p>Ateliers d'expression artistique, développement du leadership, scène ouverte et accompagnement des talents.</p>
+              <a href="/inscription.html" class="program-btn" data-i18n="program_cta">Participer →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Programme 6 - Médiation famille-école -->
+        <div class="program-flip-card">
+          <div class="program-flip-inner">
+            <div class="program-flip-front">
+              <img src="/images/school.png" alt="Médiation scolaire" class="program-image" onerror="this.src='https://placehold.co/400x200/0f5c3e/white?text=Médiation'">
+              <div class="program-content">
+                <div class="program-icon">🏫</div>
+                <h3 data-i18n="program_6_title">Médiation famille-école</h3>
+                <p data-i18n="program_6_text">Accompagnement des parents dans le système scolaire.</p>
+              </div>
+            </div>
+            <div class="program-flip-back">
+              <div class="back-icon">🎓</div>
+              <h4>En savoir plus</h4>
+              <p>Accompagnement scolaire, médiation entre parents et enseignants, suivi personnalisé et ateliers éducatifs.</p>
+              <a href="/inscription.html" class="program-btn" data-i18n="program_cta">Participer →</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-placeholder"></div>
+
+<script>
+  function refreshProgramImages() {
+    const timestamp = new Date().getTime();
+    document.querySelectorAll('.program-image').forEach(img => {
+      const src = img.getAttribute('src');
+      if (src && src.startsWith('/images/')) {
+        img.src = src.split('?')[0] + `?t=${timestamp}`;
+      }
+    });
+  }
+
+  function refreshBanner() {
+    const bannerDiv = document.getElementById('hero-bg-image');
+    if (bannerDiv) {
+      const timestamp = new Date().getTime();
+      bannerDiv.style.backgroundImage = `url('/images/programs-banner.png?t=${timestamp}')`;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    refreshProgramImages();
+    refreshBanner();
+    
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        refreshProgramImages();
+        refreshBanner();
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

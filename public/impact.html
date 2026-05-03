@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAFF | Impact</title>
+  <link rel="icon" href="/images/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/header.js"></script>
+  <script defer src="/js/footer.js"></script>
+  <script defer src="/js/i18n.js"></script>
+  <style>
+    /* Styles spécifiques à la page Impact */
+    .page-hero {
+      padding: 80px 0 48px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #fef9e6 0%, #e9f5ef 100%);
+    }
+
+    .hero-bg-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.15;
+      z-index: 0;
+    }
+
+    .page-hero .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    .lead {
+      color: #2d4a3b;
+      font-size: 1.2rem;
+      max-width: 700px;
+    }
+
+    .section-alt {
+      background: #faf9f6;
+    }
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 32px;
+      color: #0a3528;
+    }
+
+    /* Statistiques */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #0a3528, #1a5a45);
+      border-radius: 28px;
+      padding: 32px 20px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .stat-number {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: #e76f51;
+      margin-bottom: 8px;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .stat-label {
+      color: white;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    /* Grille témoignages */
+    .success-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      margin-top: 32px;
+    }
+
+    .temoignage-card {
+      background: white;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      border: 1px solid #edf2f0;
+    }
+
+    .temoignage-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      border-color: #e76f51;
+    }
+
+    .temoignage-header {
+      background: linear-gradient(135deg, #0a3528, #1a5a45);
+      color: white;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .temoignage-photo {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #e76f51;
+    }
+
+    .temoignage-author h3 {
+      font-size: 1.2rem;
+      margin-bottom: 5px;
+    }
+
+    .temoignage-author p {
+      font-size: 0.8rem;
+      opacity: 0.9;
+    }
+
+    .temoignage-body {
+      padding: 25px;
+    }
+
+    .temoignage-body p {
+      color: #4a5568;
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    .temoignage-body .quote-icon {
+      font-size: 2rem;
+      color: #e76f51;
+      opacity: 0.3;
+      margin-bottom: 10px;
+    }
+
+    /* Rapports */
+    .reports-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 32px;
+    }
+
+    .report-item {
+      background: white;
+      border-radius: 20px;
+      padding: 24px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      border: 1px solid #edf2f0;
+      transition: all 0.3s ease;
+    }
+
+    .report-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      border-color: #e76f51;
+    }
+
+    .report-info {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .report-icon {
+      font-size: 2.2rem;
+    }
+
+    .report-info h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0a3528;
+      margin-bottom: 4px;
+    }
+
+    .report-meta {
+      color: #6c757d;
+      font-size: 0.85rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 28px;
+      border-radius: 60px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: 0.2s ease;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .btn-primary {
+      background: #e76f51;
+      color: white;
+      box-shadow: 0 4px 8px rgba(231,111,81,0.2);
+    }
+
+    .btn-primary:hover {
+      background: #d45a3a;
+      transform: translateY(-2px);
+    }
+
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .loading-spinner {
+      text-align: center;
+      padding: 60px;
+      grid-column: span 2;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #edf2f0;
+      border-top-color: #e76f51;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .empty-message {
+      text-align: center;
+      padding: 60px;
+      background: #f8fafc;
+      border-radius: 24px;
+      color: #6c757d;
+      grid-column: span 2;
+    }
+
+    /* Responsive */
+    @media (max-width: 800px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+      .success-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      .report-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .download-btn {
+        width: 100%;
+        justify-content: center;
+      }
+      .page-hero {
+        padding: 60px 0 32px;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      .lead {
+        font-size: 1rem;
+      }
+      .loading-spinner, .empty-message {
+        grid-column: span 1;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .stat-card {
+        padding: 20px 12px;
+      }
+      .stat-number {
+        font-size: 2rem;
+      }
+      .temoignage-header {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="header-placeholder"></div>
+
+<main>
+  <section class="page-hero" id="page-hero">
+    <div class="hero-bg-image" id="hero-bg-image"></div>
+    <div class="container">
+      <div class="eyebrow" data-i18n="impact_page_eyebrow">Résultats</div>
+      <h1 data-i18n="impact_page_title">Impact et résultats</h1>
+      <p class="lead" data-i18n="impact_page_intro">Chiffres clés, histoires de réussite et rapports d'impact téléchargeables.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">500+</div>
+          <div class="stat-label" data-i18n="impact_page_stat_1">Familles</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">300+</div>
+          <div class="stat-label" data-i18n="impact_page_stat_2">Jeunes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">40+</div>
+          <div class="stat-label" data-i18n="impact_page_stat_3">Partenaires</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">95%</div>
+          <div class="stat-label" data-i18n="impact_page_stat_4">Satisfaction</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <h2 data-i18n="impact_success_title">Histoires de réussite</h2>
+      <div id="temoignages-container" class="success-grid">
+        <div class="loading-spinner">
+          <div class="spinner"></div>
+          <p>Chargement des témoignages...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 data-i18n="impact_reports_title">Rapports d'impact</h2>
+      <div class="reports-list">
+        <div class="report-item">
+          <div class="report-info">
+            <div class="report-icon">📊</div>
+            <div>
+              <h3 data-i18n="impact_report_1_title">Rapport d'impact 2025</h3>
+              <p class="report-meta" data-i18n="impact_report_1_text">Résultats, indicateurs et faits saillants.</p>
+            </div>
+          </div>
+          <a class="btn btn-primary download-btn" href="/documents/rapport-impact-2025.pdf" target="_blank" data-i18n="download_btn">📥 Télécharger</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-placeholder"></div>
+
+<script>
+  // Rafraîchir la bannière
+  function refreshBanner() {
+    const bannerDiv = document.getElementById('hero-bg-image');
+    if (bannerDiv) {
+      const timestamp = new Date().getTime();
+      bannerDiv.style.backgroundImage = `url('/images/impact-banner.png?t=${timestamp}')`;
+    }
+  }
+
+  function getCategoryIcon(categorie) {
+    switch(categorie) {
+      case 'jeune': return '🌟';
+      case 'partenaire': return '🤝';
+      case 'benevole': return '🙋';
+      default: return '👨‍👩‍👧‍👦';
+    }
+  }
+
+  async function loadTemoignages() {
+    const container = document.getElementById('temoignages-container');
+    if (!container) return;
+    
+    try {
+      const response = await fetch('/api/temoignages');
+      const temoignages = await response.json();
+      
+      if (!temoignages || temoignages.length === 0) {
+        container.innerHTML = `<div class="empty-message">📭 Aucun témoignage pour le moment.</div>`;
+        return;
+      }
+      
+      container.innerHTML = temoignages.map(t => `
+        <div class="temoignage-card">
+          <div class="temoignage-header">
+            ${t.photo ? `<img src="${escapeHtml(t.photo)}?t=${Date.now()}" class="temoignage-photo" onerror="this.src='https://placehold.co/70x70/e76f51/white?text=Photo'">` : `<div class="temoignage-photo" style="display: flex; align-items: center; justify-content: center; font-size: 2rem;">${getCategoryIcon(t.categorie)}</div>`}
+            <div class="temoignage-author">
+              <h3>${escapeHtml(t.auteur)}</h3>
+              <p>${escapeHtml(t.role || '')}</p>
+            </div>
+          </div>
+          <div class="temoignage-body">
+            <div class="quote-icon">“</div>
+            <p>${escapeHtml(t.contenu)}</p>
+          </div>
+        </div>
+      `).join('');
+      
+    } catch (error) {
+      console.error('Erreur chargement témoignages:', error);
+      container.innerHTML = `<div class="empty-message">❌ Erreur de chargement des témoignages.</div>`;
+    }
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+
+  // Initialisation
+  document.addEventListener('DOMContentLoaded', () => {
+    refreshBanner();
+    loadTemoignages();
+    
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        refreshBanner();
+        loadTemoignages();
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAFF | Événements</title>
+  <link rel="icon" href="/images/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/header.js"></script>
+  <script defer src="/js/footer.js"></script>
+  <script defer src="/js/i18n.js"></script>
+  <style>
+    /* ========== STYLES SPÉCIFIQUES À LA PAGE ÉVÉNEMENTS ========== */
+    .section-alt {
+      background: #faf9f6;
+    }
+
+    /* Grille événements - cartes flip avec images */
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+    }
+
+    .event-flip-card {
+      background-color: transparent;
+      width: 100%;
+      height: 380px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .event-flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      border-radius: 20px;
+    }
+
+    .event-flip-card:hover .event-flip-inner {
+      transform: rotateY(180deg);
+    }
+
+    /* Face avant avec image */
+    .event-flip-front {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .event-flip-front .event-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .event-flip-front .event-content {
+      padding: 20px;
+      text-align: left;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .event-flip-front .event-date {
+      background: #e76f51;
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      display: inline-block;
+      width: fit-content;
+      margin-bottom: 12px;
+    }
+
+    .event-flip-front h3 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      color: #0a3528;
+      font-family: Georgia, serif;
+    }
+
+    .event-flip-front p {
+      font-size: 0.85rem;
+      line-height: 1.4;
+      color: #4a5568;
+      margin-bottom: 0;
+    }
+
+    /* Face arrière */
+    .event-flip-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      background: linear-gradient(135deg, #e76f51, #d45a3a);
+      color: white;
+      transform: rotateY(180deg);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .event-flip-back .back-icon {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+
+    .event-flip-back h4 {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      font-family: Georgia, serif;
+    }
+
+    .event-flip-back p {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .event-flip-back .event-btn {
+      display: inline-block;
+      background: white;
+      color: #e76f51;
+      padding: 10px 25px;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: 0.2s;
+    }
+
+    .event-flip-back .event-btn:hover {
+      transform: scale(1.05);
+      background: #fef9e6;
+    }
+
+    /* Archives grid */
+    .archives-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 32px;
+    }
+
+    .archive-card {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      display: flex;
+      gap: 16px;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      border: 1px solid #edf2f0;
+    }
+
+    .archive-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+      border-color: #e76f51;
+    }
+
+    .archive-icon {
+      font-size: 2.5rem;
+    }
+
+    .archive-content h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0a3528;
+      margin-bottom: 8px;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .archive-content p {
+      color: #6c757d;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .archive-link {
+      color: #e76f51;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .archive-link:hover {
+      color: #d45a3a;
+      text-decoration: underline;
+    }
+
+    /* Loading spinner */
+    .loading-spinner {
+      text-align: center;
+      padding: 60px 20px;
+      grid-column: span 2;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #edf2f0;
+      border-top-color: #e76f51;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .empty-state, .error-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #6c757d;
+      font-size: 1.1rem;
+      background: white;
+      border-radius: 24px;
+      border: 1px solid #edf2f0;
+      grid-column: span 2;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .events-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+      }
+      .loading-spinner, .empty-state, .error-state {
+        grid-column: span 1;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .event-flip-card {
+        height: 350px;
+      }
+      .event-flip-front .event-image {
+        height: 160px;
+      }
+      .event-flip-front h3 {
+        font-size: 1.1rem;
+      }
+      .event-flip-front p {
+        font-size: 0.8rem;
+      }
+      .event-flip-back h4 {
+        font-size: 1.1rem;
+      }
+      .event-flip-back p {
+        font-size: 0.8rem;
+      }
+      .archives-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="header-placeholder"></div>
+
+<main>
+  <section class="page-hero" id="page-hero">
+    <div class="hero-bg-image" id="hero-bg-image"></div>
+    <div class="container">
+      <div class="eyebrow" data-i18n="events_page_eyebrow">Vie communautaire</div>
+      <h1 data-i18n="events_page_title">Événements et actualités</h1>
+      <p class="lead" data-i18n="events_page_intro">Calendrier, actualités communautaires, communiqués et archives.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="events-grid" id="events-list">
+        <div class="loading-spinner">
+          <div class="spinner"></div>
+          <p data-i18n="loading_text">Chargement des événements...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <h2 data-i18n="events_archives_title">Communiqués et archives</h2>
+      <div class="archives-grid">
+        <div class="archive-card">
+          <div class="archive-icon">📄</div>
+          <div class="archive-content">
+            <h3 data-i18n="archive_1_title">Rapport annuel 2024</h3>
+            <p data-i18n="archive_1_text">Bilan des activités et réalisations de l'année écoulée.</p>
+            <a href="#" class="archive-link" data-i18n="archive_read">Lire le communiqué →</a>
+          </div>
+        </div>
+        <div class="archive-card">
+          <div class="archive-icon">🎉</div>
+          <div class="archive-content">
+            <h3 data-i18n="archive_2_title">Gala FAFF 2024</h3>
+            <p data-i18n="archive_2_text">Soirée de reconnaissance et de célébration communautaire.</p>
+            <a href="#" class="archive-link" data-i18n="archive_view">Voir les photos →</a>
+          </div>
+        </div>
+        <div class="archive-card">
+          <div class="archive-icon">📢</div>
+          <div class="archive-content">
+            <h3 data-i18n="archive_3_title">Lancement du programme jeunesse</h3>
+            <p data-i18n="archive_3_text">Nouveau programme de mentorat pour les jeunes afro francophones.</p>
+            <a href="#" class="archive-link" data-i18n="archive_read">Lire le communiqué →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-placeholder"></div>
+
+<script>
+  // Rafraîchir la bannière
+  function refreshBanner() {
+    const bannerDiv = document.getElementById('hero-bg-image');
+    if (bannerDiv) {
+      const timestamp = new Date().getTime();
+      bannerDiv.style.backgroundImage = `url('/images/evenements-banner.png?t=${timestamp}')`;
+    }
+  }
+
+  // Récupérer la langue courante depuis i18n.js
+  function getCurrentLang() {
+    return typeof currentLang !== 'undefined' ? currentLang : (localStorage.getItem('faff_lang') || 'fr');
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+
+  // Fonction pour obtenir une image de couverture basée sur le titre
+  function getEventImage(title) {
+    // Tu peux personnaliser ces chemins selon tes images
+    const imageMap = {
+      'Atelier': '/images/atelier.jpg',
+      'Tournoi': '/images/football.png',
+      'Soirée': '/images/francotalent.png',
+      'Gala': '/images/gala.jpg',
+      'Forum': '/images/forum.jpg',
+      'Rencontre': '/images/rencontre.jpg',
+      'default': '/images/event-default.jpg'
+    };
+    
+    for (const [key, img] of Object.entries(imageMap)) {
+      if (title?.includes(key)) return img;
+    }
+    return imageMap.default;
+  }
+
+  async function loadEventsPage() {
+  const container = document.getElementById('events-list');
+  if (!container) return;
+  
+  const lang = getCurrentLang();
+  
+  const getTranslation = (key) => {
+    if (typeof translations !== 'undefined' && translations[lang] && translations[lang][key]) {
+      return translations[lang][key];
+    }
+    return key;
+  };
+  
+  try {
+    const response = await fetch('/api/events');
+    if (!response.ok) throw new Error('API error');
+    
+    const data = await response.json();
+    
+    if (!Array.isArray(data) || !data.length) {
+      container.innerHTML = `<div class="empty-state">${getTranslation('no_events')}</div>`;
+      return;
+    }
+    
+    container.innerHTML = data.map(event => {
+      const title = lang === 'en' ? (event.title_en || event.title_fr) : (event.title_fr || event.title_en);
+      const details = lang === 'en' ? (event.details_en || event.details_fr) : (event.details_fr || event.details_en);
+      const date = lang === 'en' ? (event.date_label_en || event.date_label_fr) : (event.date_label_fr || event.date_label_en);
+      const btnText = lang === 'en' ? (event.cta_label_en || event.cta_label_fr || 'Register') : (event.cta_label_fr || 'S\'inscrire');
+      const ctaUrl = event.cta_url || '/inscription.html';
+      // Utiliser l'image uploadée ou une image par défaut
+      const eventImage = event.image && event.image !== '/uploads/null' ? event.image : '/images/event-default.jpg';
+      
+      const hasDate = date && date.trim() !== '';
+      const displayDate = hasDate ? date : (lang === 'en' ? 'Date TBA' : 'Date à venir');
+      
+      const backTitle = lang === 'en' ? 'More information' : 'Plus d\'informations';
+      const backText = lang === 'en' 
+        ? `Join us for this event! ${details || 'An opportunity not to be missed.'}`
+        : `Rejoignez-nous pour cet événement ! ${details || 'Une opportunité à ne pas manquer.'}`;
+      
+      return `
+        <div class="event-flip-card">
+          <div class="event-flip-inner">
+            <div class="event-flip-front">
+              <img src="${escapeHtml(eventImage)}?t=${Date.now()}" alt="${escapeHtml(title)}" class="event-image" onerror="this.src='https://placehold.co/400x200/e76f51/white?text=Event'">
+              <div class="event-content">
+                <div class="event-date">${escapeHtml(displayDate)}</div>
+                <h3>${escapeHtml(title || '')}</h3>
+                <p>${escapeHtml(details ? details.substring(0, 100) + (details.length > 100 ? '...' : '') : '')}</p>
+              </div>
+            </div>
+            <div class="event-flip-back">
+              <div class="back-icon">✨</div>
+              <h4>${escapeHtml(backTitle)}</h4>
+              <p>${escapeHtml(backText.substring(0, 120))}${backText.length > 120 ? '...' : ''}</p>
+              <a href="${escapeHtml(ctaUrl)}" class="event-btn">${escapeHtml(btnText)} →</a>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+    
+  } catch (error) {
+    console.error('Error loading events:', error);
+    container.innerHTML = `<div class="error-state">${getTranslation('error_loading')}</div>`;
+  }
+}
+
+  // Initialisation
+  document.addEventListener('DOMContentLoaded', () => {
+    refreshBanner();
+    loadEventsPage();
+    
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        refreshBanner();
+        loadEventsPage();
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
