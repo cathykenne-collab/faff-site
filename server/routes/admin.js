@@ -114,26 +114,12 @@ router.delete('/event-slides/:id', (req, res) => {
   }
 });
 
-// ========== GESTION ÉVÉNEMENTS ==========
+// ========== GESTION ÉVÉNEMENTS (table events) ==========
 router.get('/events', (req, res) => {
   try {
     const rows = db.prepare(`
-      SELECT
-        id,
-        title as title_fr,
-        title as title_en,
-        alt as details_fr,
-        alt as details_en,
-        event_label as date_label_fr,
-        event_label as date_label_en,
-        'S''inscrire' as cta_label_fr,
-        'Register' as cta_label_en,
-        '/inscription.html' as cta_url,
-        sort_order,
-        is_active,
-        image
-      FROM event_slides
-      ORDER BY sort_order ASC
+      SELECT * FROM events 
+      ORDER BY sort_order ASC, id DESC
     `).all();
     res.json(rows);
   } catch (err) {
@@ -143,7 +129,7 @@ router.get('/events', (req, res) => {
 
 router.post('/events', upload.single('image'), (req, res) => {
   try {
-    const { title_fr, details_fr, date_label_fr, sort_order } = req.body;
+    const { title_fr, title_en, details_fr, details_en, date_label_fr, date_label_en, cta_label_fr, cta_label_en, cta_url, sort_order } = req.body;
 
     let imagePath = null;
     if (req.file) {
@@ -156,12 +142,44 @@ router.post('/events', upload.single('image'), (req, res) => {
     }
 
     const stmt = db.prepare(`
-      INSERT INTO event_slides (title, alt, event_label, sort_order, is_active, image)
-      VALUES (?, ?, ?, ?, 1, ?)
+      INSERT INTO events (
+        title_fr, title_en, details_fr, details_en, 
+        date_label_fr, date_label_en, cta_label_fr, cta_label_en, 
+        cta_url, sort_order, is_active, image
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)
     `);
-    const result = stmt.run(title_fr || null, details_fr || null, date_label_fr || null, Number(sort_order) || 0, imagePath);
+    
+    const result = stmt.run(
+      title_fr || null,
+      title_en || title_fr || null,
+      details_fr || null,
+      details_en || details_fr || null,
+      date_label_fr || null,
+      date_label_en || date_label_fr || null,
+      cta_label_fr || "S'inscrire",
+      cta_label_en || "Register",
+      cta_url || "/inscription.html",
+      Number(sort_order) || 0,
+      imagePath
+    );
 
     res.json({ success: true, id: result.lastInsertRowid });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.put('/events/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const { is_active } = req.body;
+
+    const stmt = db.prepare(`
+      UPDATE events SET is_active = ? WHERE id = ?
+    `);
+    stmt.run(is_active ? 1 : 0, id);
+
+    res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -170,7 +188,7 @@ router.post('/events', upload.single('image'), (req, res) => {
 router.delete('/events/:id', (req, res) => {
   try {
     const { id } = req.params;
-    db.prepare("DELETE FROM event_slides WHERE id = ?").run(id);
+    db.prepare("DELETE FROM events WHERE id = ?").run(id);
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });

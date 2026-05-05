@@ -517,6 +517,9 @@ body {
 
 #event-slider {
   transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
 }
 
 .slider-controls {
@@ -753,9 +756,6 @@ h1 {
   .hero-video .hero-content .lead {
     font-size: 1rem;
   }
-  #event-slider img {
-    height: 320px !important;
-  }
   .page-hero {
     padding: 60px 0 32px;
   }
@@ -801,8 +801,71 @@ h1 {
     font-size: 1rem;
   }
 }
-/* FORCE - Supprime l'opacité sur TOUTES les bannières */
+
+/* ========== FORCE - Supprime l'opacité sur TOUTES les bannières ========== */
 .page-hero .hero-bg-image,
 .hero-bg-image {
   opacity: 1 !important;
+}
+
+/* ========== IMAGES DU DIAPORAMA - VERSION OPTIMISÉE ========== */
+/* Conteneur du slide avec ratio fixe */
+.slide-container,
+.swiper-slide,
+#event-slider .slide-item {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #0a3528;
+  border-radius: 22px;
+}
+
+/* Images du diaporama - remplissage parfait sans déformation */
+#event-slider img,
+.event-slider img,
+.slide-image,
+.swiper-slide img,
+.slide-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  border-radius: 22px;
+}
+
+/* Ajustement pour mobile */
+@media (max-width: 768px) {
+  .slide-container,
+  .swiper-slide,
+  #event-slider .slide-item {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+/* Pour très petit écran */
+@media (max-width: 480px) {
+  .slide-container,
+  .swiper-slide,
+  #event-slider .slide-item {
+    aspect-ratio: 1 / 1;
+  }
+}
+
+/* Option: si certaines images ont besoin d'un focus différent */
+.slide-container img[data-focus="top"] {
+  object-position: top;
+}
+
+.slide-container img[data-focus="bottom"] {
+  object-position: bottom;
+}
+
+.slide-container img[data-focus="left"] {
+  object-position: left;
+}
+
+.slide-container img[data-focus="right"] {
+  object-position: right;
 }

@@ -123,6 +123,9 @@ db.exec(`
   );
 `);
 
+/* MIGRATION POUR LA TABLE EVENTS - AJOUT DE LA COLONNE IMAGE */
+addColumn("events", "image", "TEXT");
+
 /* MIGRATIONS MEMBRES */
 addColumn("membres", "nom", "TEXT");
 addColumn("membres", "prenom", "TEXT");
