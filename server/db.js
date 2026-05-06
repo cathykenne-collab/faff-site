@@ -75,8 +75,16 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nom TEXT,
     email TEXT UNIQUE,
-    subscribed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    is_active INTEGER DEFAULT 1
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
+  CREATE TABLE IF NOT EXISTS newsletter_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sujet TEXT,
+    message TEXT,
+    destinataires_count INTEGER,
+    pieces_jointes TEXT,
+    envoye_le DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 
   CREATE TABLE IF NOT EXISTS recrutement (
@@ -126,6 +134,9 @@ db.exec(`
 /* MIGRATION POUR LA TABLE EVENTS - AJOUT DE LA COLONNE IMAGE */
 addColumn("events", "image", "TEXT");
 
+/* MIGRATION POUR LA TABLE NEWSLETTER - AJOUT DE is_active */
+addColumn("newsletter", "is_active", "INTEGER DEFAULT 1");
+
 /* MIGRATIONS MEMBRES */
 addColumn("membres", "nom", "TEXT");
 addColumn("membres", "prenom", "TEXT");
@@ -164,6 +175,7 @@ addColumn("recrutement", "lieu", "TEXT");
 addColumn("recrutement", "type_contrat", "TEXT");
 addColumn("recrutement", "date_limite", "TEXT");
 addColumn("recrutement", "is_active", "INTEGER DEFAULT 1");
+addColumn("recrutement", "pdf_url", "TEXT");
 
 console.log("✅ Base de données initialisée et migrée");
 console.log(`📁 Base SQLite : ${dbPath}`);

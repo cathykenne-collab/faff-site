@@ -68,18 +68,24 @@
       font-size: 0.8rem;
       color: #6c757d;
     }
-    .btn-apply {
-      background: #e76f51;
-      color: white;
-      padding: 8px 20px;
-      border-radius: 40px;
+    .btn-pdf {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #fef9e6;
+      color: #e76f51;
+      padding: 10px 16px;
+      border-radius: 12px;
       text-decoration: none;
       font-weight: 600;
       font-size: 0.85rem;
       transition: 0.2s;
+      border: 1px solid #e76f51;
+      margin-top: 10px;
     }
-    .btn-apply:hover {
-      background: #d45a3a;
+    .btn-pdf:hover {
+      background: #e76f51;
+      color: white;
       transform: translateY(-2px);
     }
     .no-offers {
@@ -111,6 +117,13 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 30px;
       margin-top: 30px;
+    }
+    .pdf-section {
+      margin-top: 15px;
+      padding: 12px;
+      background: #fef9e6;
+      border-radius: 12px;
+      border-left: 4px solid #e76f51;
     }
     @media (max-width: 900px) {
       .grid-3 {
@@ -194,10 +207,8 @@
   }
 
   function getTranslation(key) {
-    // Récupérer la langue depuis localStorage
     let lang = localStorage.getItem('faff_lang') || 'fr';
     
-    // Traductions manuelles (fallback)
     const translations = {
       fr: {
         recrutement_no_offers: 'Aucune offre disponible pour le moment.',
@@ -205,7 +216,7 @@
         recrutement_contract: 'Type de contrat',
         recrutement_deadline: 'Candidatures jusqu\'au',
         recrutement_no_deadline: 'Date limite non spécifiée',
-        recrutement_apply: 'Postuler',
+        recrutement_download_pdf: 'Voir le poste',
         error_loading: 'Erreur de chargement. Veuillez réessayer plus tard.',
         recrutement_why_title: 'Pourquoi rejoindre FAFF ?',
         recrutement_why_1_title: 'Mission porteuse de sens',
@@ -221,7 +232,7 @@
         recrutement_contract: 'Contract type',
         recrutement_deadline: 'Applications until',
         recrutement_no_deadline: 'No deadline specified',
-        recrutement_apply: 'Apply',
+        recrutement_download_pdf: 'View the job',
         error_loading: 'Loading error. Please try again later.',
         recrutement_why_title: 'Why join FAFF?',
         recrutement_why_1_title: 'Meaningful mission',
@@ -275,22 +286,24 @@
             <h3>${escapeHtml(offer.titre)}</h3>
             <div class="offer-meta">
               <span>📍 ${escapeHtml(offer.lieu || getTranslation('recrutement_location'))}</span>
-              <span>📄 ${escapeHtml(offer.type_contrat || getTranslation('recrutement_contract'))}</span>
+              <span>${escapeHtml(offer.type_contrat || getTranslation('recrutement_contract'))}</span>
             </div>
           </div>
           <div class="offer-body">
-            <p>${escapeHtml(offer.description.substring(0, 200))}${offer.description.length > 200 ? '...' : ''}</p>
+            <p>${escapeHtml(offer.description)}</p>
+            ${offer.pdf_url ? `
+              <div class="pdf-section">
+                <a href="${escapeHtml(offer.pdf_url)}" target="_blank" class="btn-pdf">
+                  📄 ${getTranslation('recrutement_download_pdf')}
+                </a>
+              </div>
+            ` : ''}
           </div>
           <div class="offer-footer">
             <span class="offer-deadline">📅 ${offer.date_limite ? `${getTranslation('recrutement_deadline')} ${new Date(offer.date_limite).toLocaleDateString()}` : getTranslation('recrutement_no_deadline')}</span>
-            <a href="/contact.html" class="btn-apply">${getTranslation('recrutement_apply')} →</a>
           </div>
         </div>
       `).join('');
-      
-      // Mettre à jour les textes des titres
-      const whyTitle = document.querySelector('h2[data-i18n="recrutement_why_title"]');
-      if (whyTitle) whyTitle.textContent = getTranslation('recrutement_why_title');
       
     } catch (error) {
       console.error('Erreur:', error);
@@ -298,11 +311,38 @@
     }
   }
 
+  // Mise à jour des textes selon la langue
+  function updateUILanguage() {
+    const elements = document.querySelectorAll('[data-i18n]');
+    elements.forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      const translation = getTranslation(key);
+      if (translation !== key) {
+        el.textContent = translation;
+      }
+    });
+  }
+
+  // Écouter les changements de langue
   document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM chargé');
     refreshBanner();
     loadOffers();
+    updateUILanguage();
+    
+    // Écouter les changements de langue du header global
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'faff_lang') {
+        loadOffers();
+        updateUILanguage();
+      }
+    });
   });
+
+  // Exposer la fonction pour que header.js puisse appeler
+  window.updateRecrutementLanguage = function() {
+    loadOffers();
+    updateUILanguage();
+  };
 </script>
 
 </body>

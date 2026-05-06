@@ -46,9 +46,9 @@
                 <input type="tel" name="telephone" placeholder="(123) 456-7890">
               </div>
               <div>
-                <label data-i18n="registration_program">Programme</label>
-                <select name="programme" required>
-                  <option value="" data-i18n="registration_choose_program">Choisir un programme</option>
+                <label data-i18n="registration_program">Programme / Événement</label>
+                <select name="programme" required id="programme-select">
+                  <option value="" data-i18n="registration_choose_program">Choisir un programme ou événement</option>
                   <option value="Renforcement des liens familiaux" data-i18n="program_family">Renforcement des liens familiaux</option>
                   <option value="Repère des Pères" data-i18n="program_fathers">Repère des Pères</option>
                   <option value="Mamans & Savoirs" data-i18n="program_mothers">Mamans & Savoirs</option>
@@ -174,6 +174,15 @@
     transform: none;
   }
 
+  .info-message {
+    margin-top: 8px;
+    font-size: 0.8rem;
+    background-color: #fef9e6;
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: #e76f51;
+  }
+
   @media (max-width: 800px) {
     .page-hero {
       padding: 60px 0 32px;
@@ -193,29 +202,107 @@
 </style>
 
 <script>
-  // Fonction pour obtenir la traduction (plus robuste)
-  function getTranslation(key) {
-    // Récupérer la langue actuelle
-    let lang = 'fr';
-    if (typeof window.currentLang !== 'undefined') {
-      lang = window.currentLang;
-    } else if (localStorage.getItem('faff_lang')) {
-      lang = localStorage.getItem('faff_lang');
+  // ========== TRADUCTIONS COMPLÈTES ==========
+  const inscriptionTranslations = {
+    fr: {
+      registration_eyebrow: "Participation",
+      registration_title: "Espace inscription",
+      registration_intro: "Inscrivez-vous aux activités et programmes de FAFF.",
+      registration_name: "Nom complet",
+      registration_email: "Email",
+      registration_phone: "Téléphone",
+      registration_program: "Programme / Événement",
+      registration_choose_program: "Choisir un programme ou événement",
+      registration_date: "Date souhaitée",
+      registration_preferred_lang: "Langue préférée",
+      registration_infos: "Informations complémentaires",
+      registration_submit: "Soumettre ma candidature",
+      registration_reset: "Effacer",
+      lang_french: "Français",
+      lang_english: "English",
+      program_family: "Renforcement des liens familiaux",
+      program_fathers: "Repère des Pères",
+      program_mothers: "Mamans & Savoirs",
+      program_soccer: "Football en Français",
+      program_talent: "Franc'Ô Talent",
+      program_mediation: "Médiation famille-école",
+      sending: "Envoi en cours...",
+      success: "✅ Inscription envoyée ! Nous vous contacterons bientôt.",
+      error: "❌ Erreur. Veuillez réessayer.",
+      network_error: "❌ Problème de connexion. Vérifiez votre réseau.",
+      info_registering_for: "ℹ️ Vous êtes en train de vous inscrire à :"
+    },
+    en: {
+      registration_eyebrow: "Registration",
+      registration_title: "Registration Space",
+      registration_intro: "Sign up for FAFF activities and programs.",
+      registration_name: "Full name",
+      registration_email: "Email",
+      registration_phone: "Phone",
+      registration_program: "Program / Event",
+      registration_choose_program: "Choose a program or event",
+      registration_date: "Preferred date",
+      registration_preferred_lang: "Preferred language",
+      registration_infos: "Additional information",
+      registration_submit: "Submit my application",
+      registration_reset: "Clear",
+      lang_french: "Français",
+      lang_english: "English",
+      program_family: "Family strengthening",
+      program_fathers: "Fathers' Corner",
+      program_mothers: "Mothers & Knowledge",
+      program_soccer: "Football in French",
+      program_talent: "Franc'Ô Talent",
+      program_mediation: "School-family mediation",
+      sending: "Sending...",
+      success: "✅ Registration sent! We will contact you soon.",
+      error: "❌ Error. Please try again.",
+      network_error: "❌ Connection problem. Check your network.",
+      info_registering_for: "ℹ️ You are registering for:"
     }
-    
-    // Chercher la traduction
-    if (typeof window.translations !== 'undefined' && window.translations[lang] && window.translations[lang][key]) {
-      return window.translations[lang][key];
+  };
+
+  // Récupérer la langue courante
+  function getCurrentLang() {
+    return localStorage.getItem('faff_lang') || 'fr';
+  }
+
+  // Fonction de traduction
+  function t(key) {
+    const lang = getCurrentLang();
+    if (inscriptionTranslations[lang] && inscriptionTranslations[lang][key]) {
+      return inscriptionTranslations[lang][key];
     }
-    
-    // Fallback pour les messages d'erreur
-    const fallback = {
-      sending: 'Envoi en cours...',
-      success: '✅ Inscription envoyée ! Nous vous contacterons bientôt.',
-      error: '❌ Erreur. Veuillez réessayer.',
-      network_error: '❌ Problème de connexion. Vérifiez votre réseau.'
-    };
-    return fallback[key] || key;
+    return inscriptionTranslations.fr[key] || key;
+  }
+
+  // Mettre à jour toute l'interface
+  function updateUILanguage() {
+    const elements = document.querySelectorAll('[data-i18n]');
+    elements.forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      const translation = t(key);
+      if (translation !== key) {
+        if (el.tagName === 'INPUT' && (el.type === 'text' || el.type === 'email' || el.type === 'tel')) {
+          el.placeholder = translation;
+        } else if (el.tagName === 'TEXTAREA') {
+          el.placeholder = translation;
+        } else if (el.tagName === 'OPTION') {
+          el.textContent = translation;
+        } else {
+          el.textContent = translation;
+        }
+      }
+    });
+    updateInfoMessage();
+  }
+
+  function refreshBanner() {
+    const bannerDiv = document.getElementById('hero-bg-image');
+    if (bannerDiv) {
+      const timestamp = new Date().getTime();
+      bannerDiv.style.backgroundImage = `url('/images/inscription-banner.png?t=${timestamp}')`;
+    }
   }
 
   function showMessage(text, isError = false) {
@@ -235,32 +322,102 @@
     }, 5000);
   }
 
-  function refreshBanner() {
-    const bannerDiv = document.getElementById('hero-bg-image');
-    if (bannerDiv) {
-      const timestamp = new Date().getTime();
-      bannerDiv.style.backgroundImage = `url('/images/inscription-banner.png?t=${timestamp}')`;
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+
+  // Récupérer les paramètres de l'URL
+  function getUrlParams() {
+    const params = new URLSearchParams(window.location.search);
+    return {
+      event_name: params.get('event_name'),
+      event_id: params.get('event_id')
+    };
+  }
+
+  // Mettre à jour le message d'information
+  function updateInfoMessage() {
+    const params = getUrlParams();
+    const eventName = params.event_name;
+    const infoDiv = document.getElementById('event-info-message');
+    
+    if (infoDiv && eventName) {
+      infoDiv.innerHTML = `${t('info_registering_for')} <strong>${escapeHtml(eventName)}</strong>`;
     }
   }
 
+  // Pré-remplir le champ programme (champ ACTIF - pas disabled)
+  function prefillEventName() {
+    const params = getUrlParams();
+    const eventName = params.event_name;
+    
+    if (eventName) {
+      const programmeSelect = document.getElementById('programme-select');
+      
+      // Vérifier si l'événement existe déjà dans la liste
+      let optionExists = false;
+      for (let i = 0; i < programmeSelect.options.length; i++) {
+        if (programmeSelect.options[i].value === eventName) {
+          optionExists = true;
+          break;
+        }
+      }
+      
+      // Si l'événement n'existe pas, l'ajouter
+      if (!optionExists && eventName) {
+        const newOption = document.createElement('option');
+        newOption.value = eventName;
+        newOption.textContent = eventName;
+        programmeSelect.appendChild(newOption);
+      }
+      
+      // Sélectionner l'événement (champ RESTE ACTIF pour que la valeur soit envoyée)
+      programmeSelect.value = eventName;
+      // PAS de disabled !!!
+      
+      // Ajouter un message d'information
+      if (!document.getElementById('event-info-message')) {
+        const infoDiv = document.createElement('div');
+        infoDiv.id = 'event-info-message';
+        infoDiv.className = 'info-message';
+        infoDiv.innerHTML = `${t('info_registering_for')} <strong>${escapeHtml(eventName)}</strong>`;
+        
+        const parentDiv = programmeSelect.parentElement;
+        parentDiv.appendChild(infoDiv);
+      }
+    }
+  }
+
+  // Initialisation du formulaire
   const inscriptionForm = document.getElementById('inscription-form');
   if (inscriptionForm) {
     inscriptionForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
       const msgDiv = document.getElementById('inscription-message');
+      const submitBtn = inscriptionForm.querySelector('button[type="submit"]');
+      const originalBtnText = submitBtn.textContent;
+      
+      // Désactiver le bouton pendant l'envoi
+      submitBtn.disabled = true;
+      submitBtn.textContent = t('sending');
+      
       msgDiv.style.display = 'block';
-      msgDiv.textContent = getTranslation('sending');
+      msgDiv.textContent = t('sending');
       msgDiv.style.backgroundColor = '#e3f2fd';
       msgDiv.style.color = '#1565c0';
       msgDiv.style.border = '1px solid #bbdefb';
       
-      // Construire l'objet data correctement
       const formData = new FormData(e.target);
       const data = {
         nom: formData.get('nom'),
         email: formData.get('email'),
-        telephone: formData.get('telephone') || null,
         programme: formData.get('programme'),
         date_souhaitee: formData.get('date_souhaitee') || null,
         infos: formData.get('infos') || null
@@ -279,14 +436,19 @@
         console.log('📥 Réponse:', result);
         
         if (response.ok && result.success) {
-          showMessage(getTranslation('success'), false);
-          e.target.reset();
+          showMessage(t('success'), false);
+          inscriptionForm.reset();
+          // Re-préremplir après reset
+          prefillEventName();
         } else {
-          showMessage(result.error || getTranslation('error'), true);
+          showMessage(result.error || t('error'), true);
         }
       } catch (error) {
         console.error('❌ Erreur:', error);
-        showMessage(getTranslation('network_error'), true);
+        showMessage(t('network_error'), true);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
       }
     });
 
@@ -295,12 +457,23 @@
       resetBtn.addEventListener('click', () => {
         const msgDiv = document.getElementById('inscription-message');
         msgDiv.style.display = 'none';
+        // Re-préremplir après reset
+        setTimeout(() => prefillEventName(), 10);
       });
     }
   }
 
+  // Écouter les changements de langue
+  document.addEventListener('languageChanged', (e) => {
+    updateUILanguage();
+    updateInfoMessage();
+  });
+
   document.addEventListener('DOMContentLoaded', () => {
     refreshBanner();
+    updateUILanguage();
+    prefillEventName();
+    
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) refreshBanner();
     });

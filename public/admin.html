@@ -151,6 +151,32 @@
       border-radius: 12px;
       border: 1px solid #e2e8f0;
     }
+    .attachments-preview {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .attachment-card {
+      background: #f8fafc;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #e2e8f0;
+    }
+    .pdf-preview {
+      background: #fef9e6;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #e76f51;
+    }
     .mono {
       font-family: 'Courier New', monospace;
       font-size: 0.7rem;
@@ -216,6 +242,9 @@
       outline: none;
       border-color: #e76f51;
       box-shadow: 0 0 0 3px rgba(231,111,81,0.1);
+    }
+    .form-group input[type="file"] {
+      padding: 10px;
     }
     .form-row {
       display: grid;
@@ -588,14 +617,25 @@
           <div class="card">
             <div class="card-body">
               <h2 class="section-title" data-i18n="admin_add_offer_title">📋 Ajouter une offre d'emploi</h2>
-              <form id="recrutement-form">
+              <form id="recrutement-form" enctype="multipart/form-data">
                 <div class="form-group">
                   <label data-i18n="admin_offer_title">Titre du poste</label>
                   <input type="text" name="titre" required placeholder="ex: Animateur socioculturel">
                 </div>
                 <div class="form-group">
-                  <label data-i18n="admin_offer_desc">Description</label>
-                  <textarea name="description" rows="4" required placeholder="Missions, profil recherché, conditions..."></textarea>
+                  <label data-i18n="admin_offer_desc">Description courte</label>
+                  <textarea name="description" rows="3" required placeholder="Missions, profil recherché..."></textarea>
+                  <small>Description qui s'affichera sur la page recrutement</small>
+                </div>
+                <div class="form-group">
+                  <label>📎 Fiche de poste (PDF)</label>
+                  <input type="file" name="pdf" accept="application/pdf" id="recrutement-pdf-input">
+                  <small>Le PDF sera téléchargeable par les candidats</small>
+                </div>
+                <div id="recrutement-pdf-preview" class="preview" style="display: none;">
+                  <div class="pdf-preview">
+                    📄 <span id="pdf-filename"></span>
+                  </div>
                 </div>
                 <div class="form-row">
                   <div class="form-group">
@@ -730,15 +770,24 @@
         <div class="card">
           <div class="card-body">
             <h2 class="section-title" data-i18n="admin_send_title">✉️ Envoyer une newsletter</h2>
-            <form id="send-newsletter-form">
+            <form id="send-newsletter-form" enctype="multipart/form-data">
               <div class="form-group">
                 <label data-i18n="admin_send_subject">Sujet</label>
                 <input type="text" name="sujet" required placeholder="Nouveautés FAFF - Avril 2025">
               </div>
               <div class="form-group">
                 <label data-i18n="admin_send_message">Message</label>
-                <textarea name="message" rows="8" required placeholder="Bonjour,&#10;&#10;Voici les actualités du mois..."></textarea>
+                <textarea name="message" rows="6" required placeholder="Bonjour,
+
+Voici les actualités du mois..."></textarea>
+                <small>Vous pouvez intégrer des images en les joignant ci-dessous.</small>
               </div>
+              <div class="form-group">
+                <label>📎 Pièces jointes (images, PDF, flyers - max 5 fichiers, 10MB chacun)</label>
+                <input type="file" name="attachments" accept="image/*,application/pdf,.doc,.docx" multiple id="attachments-input">
+                <small>Formats acceptés : JPG, PNG, PDF, DOC, DOCX</small>
+              </div>
+              <div id="attachments-preview" class="attachments-preview"></div>
               <button class="btn btn-primary" type="submit" id="send-newsletter-btn" data-i18n="admin_send_btn">✉️ Envoyer à tous les abonnés</button>
               <div id="send-msg" class="status"></div>
             </form>
@@ -787,13 +836,14 @@
 
   async function refreshAll() {
     try {
-      const [inscriptions, events, slides, contacts, newsletter, temoignages] = await Promise.all([
+      const [inscriptions, events, slides, contacts, newsletter, temoignages, recrutement] = await Promise.all([
         fetchAPI("/api/admin/inscriptions").catch(() => []),
         fetchAPI("/api/admin/events").catch(() => []),
         fetchAPI("/api/admin/event-slides").catch(() => []),
         fetchAPI("/api/admin/contacts").catch(() => []),
         fetchAPI("/api/newsletter").catch(() => []),
-        fetchAPI("/api/temoignages/admin").catch(() => [])
+        fetchAPI("/api/temoignages/admin").catch(() => []),
+        fetchAPI("/api/recrutement/admin").catch(() => [])
       ]);
 
       currentStats = {
@@ -812,6 +862,7 @@
       renderContacts(contacts);
       renderNewsletter(newsletter);
       renderTemoignages(temoignages);
+      renderRecrutement(recrutement);
       renderImageGallery();
     } catch (err) {
       console.error("Erreur refresh:", err);
@@ -926,6 +977,27 @@
         <p class="mono">📅 ${s.created_at ? new Date(s.created_at).toLocaleString() : "-"}</p>
         <div class="admin-actions">
           <button class="btn btn-secondary btn-small" onclick="deleteNewsletter(${s.id})" data-i18n="admin_delete_btn">🗑️ Supprimer</button>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function renderRecrutement(items) {
+    const el = document.getElementById("recrutement-list");
+    if (!items || items.length === 0) {
+      el.innerHTML = '<div class="empty-message" data-i18n="admin_no_offers">Aucune offre.</div>';
+      return;
+    }
+    el.innerHTML = items.map(o => `
+      <div class="admin-item">
+        <strong>${escapeHtml(o.titre || "-")}</strong>
+        <p>📍 ${escapeHtml(o.lieu || "Non spécifié")} | ${escapeHtml(o.type_contrat || "Non spécifié")}</p>
+        ${o.pdf_url ? `<p>📎 <a href="${escapeHtml(o.pdf_url)}" target="_blank" style="color:#e76f51;">Voir la fiche de poste (PDF)</a></p>` : '<p>📎 Aucun PDF</p>'}
+        <p class="mono">📅 Date limite: ${o.date_limite ? new Date(o.date_limite).toLocaleDateString() : "Non spécifiée"}</p>
+        <p>${escapeHtml(o.description ? o.description.substring(0, 100) + (o.description.length > 100 ? "..." : "") : "-")}</p>
+        <div class="admin-actions">
+          <button class="btn btn-secondary btn-small" onclick="toggleOfferStatus(${o.id}, ${o.is_active})">${o.is_active === 1 ? "🔒 Désactiver" : "✅ Activer"}</button>
+          <button class="btn btn-secondary btn-small" onclick="deleteOffer(${o.id})">🗑️ Supprimer</button>
         </div>
       </div>
     `).join("");
@@ -1156,26 +1228,6 @@
     }
   }
 
-  function renderRecrutement(items) {
-    const el = document.getElementById("recrutement-list");
-    if (!items || items.length === 0) {
-      el.innerHTML = '<div class="empty-message" data-i18n="admin_no_offers">Aucune offre.</div>';
-      return;
-    }
-    el.innerHTML = items.map(o => `
-      <div class="admin-item">
-        <strong>${escapeHtml(o.titre || "-")}</strong>
-        <p>📍 ${escapeHtml(o.lieu || "Non spécifié")} | ${escapeHtml(o.type_contrat || "Non spécifié")}</p>
-        <p class="mono">📅 Date limite: ${o.date_limite ? new Date(o.date_limite).toLocaleDateString() : "Non spécifiée"}</p>
-        <p>${escapeHtml(o.description ? o.description.substring(0, 100) + (o.description.length > 100 ? "..." : "") : "-")}</p>
-        <div class="admin-actions">
-          <button class="btn btn-secondary btn-small" onclick="toggleOfferStatus(${o.id}, ${o.is_active})">${o.is_active === 1 ? "🔒 Désactiver" : "✅ Activer"}</button>
-          <button class="btn btn-secondary btn-small" onclick="deleteOffer(${o.id})">🗑️ Supprimer</button>
-        </div>
-      </div>
-    `).join("");
-  }
-
   async function toggleOfferStatus(id, currentStatus) {
     try {
       const res = await fetch(`/api/recrutement/${id}`, {
@@ -1200,19 +1252,29 @@
     e.preventDefault();
     showMessage("recrutement-msg", "💾 Enregistrement...", true);
     try {
-      const payload = Object.fromEntries(new FormData(e.target).entries());
+      const formData = new FormData(e.target);
       const res = await fetch("/api/recrutement", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        body: formData
       });
       if (!res.ok) throw new Error((await res.json()).error);
       showMessage("recrutement-msg", "✅ Offre ajoutée !", true);
       e.target.reset();
+      document.getElementById("recrutement-pdf-preview").style.display = "none";
       loadRecrutement();
     } catch (err) {
       showMessage("recrutement-msg", "❌ " + err.message, false);
     }
+  });
+
+  // Prévisualisation PDF recrutement
+  document.getElementById("recrutement-pdf-input")?.addEventListener("change", e => {
+    const file = e.target.files[0];
+    const box = document.getElementById("recrutement-pdf-preview");
+    const filenameSpan = document.getElementById("pdf-filename");
+    if (!file) { box.style.display = "none"; return; }
+    filenameSpan.textContent = file.name;
+    box.style.display = "block";
   });
 
   // ========== FORMULAIRES EXISTANTS ==========
@@ -1268,6 +1330,21 @@
     }
   });
 
+  // ========== PRÉVISUALISATION DES PIÈCES JOINTES NEWSLETTER ==========
+  document.getElementById("attachments-input")?.addEventListener("change", function(e) {
+    const preview = document.getElementById("attachments-preview");
+    if (!preview) return;
+    preview.innerHTML = "";
+    const files = Array.from(e.target.files);
+    files.forEach(file => {
+      const fileCard = document.createElement("div");
+      fileCard.className = "attachment-card";
+      const icon = file.type.startsWith("image/") ? "🖼️" : "📎";
+      fileCard.innerHTML = `${icon} ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+      preview.appendChild(fileCard);
+    });
+  });
+
   // ========== FORMULAIRE D'ENVOI DE NEWSLETTER ==========
   document.getElementById("send-newsletter-form")?.addEventListener("submit", async e => {
     e.preventDefault();
@@ -1276,8 +1353,9 @@
 
     const sujet = document.querySelector('input[name="sujet"]').value;
     const message = document.querySelector('textarea[name="message"]').value;
+    const attachments = document.querySelector('input[name="attachments"]').files;
 
-    if (!confirm(`Envoyer la newsletter "${sujet}" à TOUS les abonnés (CCI) ?`)) return;
+    if (!confirm(`Envoyer la newsletter "${sujet}" à TOUS les abonnés avec ${attachments.length} pièce(s) jointe(s) ?`)) return;
 
     btn.disabled = true;
     btn.textContent = "⏳ Envoi en cours...";
@@ -1285,18 +1363,25 @@
     msgDiv.className = "status";
     msgDiv.style.display = "block";
 
+    const formData = new FormData();
+    formData.append("sujet", sujet);
+    formData.append("message", message);
+    for (let i = 0; i < attachments.length; i++) {
+      formData.append("attachments", attachments[i]);
+    }
+
     try {
       const res = await fetch("/api/send-newsletter", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sujet, message })
+        body: formData
       });
       const data = await res.json();
 
       if (res.ok) {
-        msgDiv.textContent = `✅ ${data.message}`;
+        msgDiv.textContent = `✅ ${data.message} (${data.attachments || 0} pièce(s) jointe(s))`;
         msgDiv.className = "status success";
         document.getElementById("send-newsletter-form").reset();
+        document.getElementById("attachments-preview").innerHTML = "";
       } else {
         msgDiv.textContent = `❌ ${data.error}`;
         msgDiv.className = "status error";

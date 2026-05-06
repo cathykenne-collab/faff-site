@@ -24,7 +24,7 @@ router.post("/", (req, res) => {
       });
     }
     
-    // Insertion dans la base
+    // Insertion dans la base - sans is_active
     const stmt = db.prepare(`
       INSERT INTO newsletter (nom, email, created_at) 
       VALUES (?, ?, datetime('now'))

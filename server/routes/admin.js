@@ -195,6 +195,16 @@ router.delete('/events/:id', (req, res) => {
   }
 });
 
+// ========== GESTION NEWSLETTER ==========
+router.get('/newsletter', (req, res) => {
+  try {
+    const rows = db.prepare("SELECT * FROM newsletter ORDER BY created_at DESC").all();
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ========== GESTION INSCRIPTIONS ==========
 router.get('/inscriptions', (req, res) => {
   try {

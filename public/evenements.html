@@ -361,93 +361,76 @@
     });
   }
 
-  // Fonction pour obtenir une image de couverture basée sur le titre
-  function getEventImage(title) {
-    // Tu peux personnaliser ces chemins selon tes images
-    const imageMap = {
-      'Atelier': '/images/atelier.jpg',
-      'Tournoi': '/images/football.png',
-      'Soirée': '/images/francotalent.png',
-      'Gala': '/images/gala.jpg',
-      'Forum': '/images/forum.jpg',
-      'Rencontre': '/images/rencontre.jpg',
-      'default': '/images/event-default.jpg'
+  async function loadEventsPage() {
+    const container = document.getElementById('events-list');
+    if (!container) return;
+    
+    const lang = getCurrentLang();
+    
+    const getTranslation = (key) => {
+      if (typeof translations !== 'undefined' && translations[lang] && translations[lang][key]) {
+        return translations[lang][key];
+      }
+      return key;
     };
     
-    for (const [key, img] of Object.entries(imageMap)) {
-      if (title?.includes(key)) return img;
-    }
-    return imageMap.default;
-  }
-
-  async function loadEventsPage() {
-  const container = document.getElementById('events-list');
-  if (!container) return;
-  
-  const lang = getCurrentLang();
-  
-  const getTranslation = (key) => {
-    if (typeof translations !== 'undefined' && translations[lang] && translations[lang][key]) {
-      return translations[lang][key];
-    }
-    return key;
-  };
-  
-  try {
-    const response = await fetch('/api/events');
-    if (!response.ok) throw new Error('API error');
-    
-    const data = await response.json();
-    
-    if (!Array.isArray(data) || !data.length) {
-      container.innerHTML = `<div class="empty-state">${getTranslation('no_events')}</div>`;
-      return;
-    }
-    
-    container.innerHTML = data.map(event => {
-      const title = lang === 'en' ? (event.title_en || event.title_fr) : (event.title_fr || event.title_en);
-      const details = lang === 'en' ? (event.details_en || event.details_fr) : (event.details_fr || event.details_en);
-      const date = lang === 'en' ? (event.date_label_en || event.date_label_fr) : (event.date_label_fr || event.date_label_en);
-      const btnText = lang === 'en' ? (event.cta_label_en || event.cta_label_fr || 'Register') : (event.cta_label_fr || 'S\'inscrire');
-      const ctaUrl = event.cta_url || '/inscription.html';
-      // Utiliser l'image uploadée ou une image par défaut
-      const eventImage = event.image && event.image !== '/uploads/null' ? event.image : '/images/event-default.jpg';
+    try {
+      const response = await fetch('/api/events');
+      if (!response.ok) throw new Error('API error');
       
-      const hasDate = date && date.trim() !== '';
-      const displayDate = hasDate ? date : (lang === 'en' ? 'Date TBA' : 'Date à venir');
+      const data = await response.json();
       
-      const backTitle = lang === 'en' ? 'More information' : 'Plus d\'informations';
-      const backText = lang === 'en' 
-        ? `Join us for this event! ${details || 'An opportunity not to be missed.'}`
-        : `Rejoignez-nous pour cet événement ! ${details || 'Une opportunité à ne pas manquer.'}`;
+      if (!Array.isArray(data) || !data.length) {
+        container.innerHTML = `<div class="empty-state">${getTranslation('no_events')}</div>`;
+        return;
+      }
       
-      return `
-        <div class="event-flip-card">
-          <div class="event-flip-inner">
-            <div class="event-flip-front">
-              <img src="${escapeHtml(eventImage)}?t=${Date.now()}" alt="${escapeHtml(title)}" class="event-image" onerror="this.src='https://placehold.co/400x200/e76f51/white?text=Event'">
-              <div class="event-content">
-                <div class="event-date">${escapeHtml(displayDate)}</div>
-                <h3>${escapeHtml(title || '')}</h3>
-                <p>${escapeHtml(details ? details.substring(0, 100) + (details.length > 100 ? '...' : '') : '')}</p>
+      container.innerHTML = data.map(event => {
+        const title = lang === 'en' ? (event.title_en || event.title_fr) : (event.title_fr || event.title_en);
+        const details = lang === 'en' ? (event.details_en || event.details_fr) : (event.details_fr || event.details_en);
+        const date = lang === 'en' ? (event.date_label_en || event.date_label_fr) : (event.date_label_fr || event.date_label_en);
+        const btnText = lang === 'en' ? (event.cta_label_en || event.cta_label_fr || 'Register') : (event.cta_label_fr || 'S\'inscrire');
+        
+        // MODIFICATION ICI : Ajout du paramètre event_name dans l'URL
+        const ctaUrl = `/inscription.html?event_name=${encodeURIComponent(title)}&event_id=${event.id}`;
+        
+        const eventImage = event.image && event.image !== '/uploads/null' ? event.image : '/images/event-default.jpg';
+        
+        const hasDate = date && date.trim() !== '';
+        const displayDate = hasDate ? date : (lang === 'en' ? 'Date TBA' : 'Date à venir');
+        
+        const backTitle = lang === 'en' ? 'More information' : 'Plus d\'informations';
+        const backText = lang === 'en' 
+          ? `Join us for this event! ${details || 'An opportunity not to be missed.'}`
+          : `Rejoignez-nous pour cet événement ! ${details || 'Une opportunité à ne pas manquer.'}`;
+        
+        return `
+          <div class="event-flip-card">
+            <div class="event-flip-inner">
+              <div class="event-flip-front">
+                <img src="${escapeHtml(eventImage)}?t=${Date.now()}" alt="${escapeHtml(title)}" class="event-image" onerror="this.src='https://placehold.co/400x200/e76f51/white?text=Event'">
+                <div class="event-content">
+                  <div class="event-date">${escapeHtml(displayDate)}</div>
+                  <h3>${escapeHtml(title || '')}</h3>
+                  <p>${escapeHtml(details ? details.substring(0, 100) + (details.length > 100 ? '...' : '') : '')}</p>
+                </div>
+              </div>
+              <div class="event-flip-back">
+                <div class="back-icon">✨</div>
+                <h4>${escapeHtml(backTitle)}</h4>
+                <p>${escapeHtml(backText.substring(0, 120))}${backText.length > 120 ? '...' : ''}</p>
+                <a href="${escapeHtml(ctaUrl)}" class="event-btn">${escapeHtml(btnText)} →</a>
               </div>
             </div>
-            <div class="event-flip-back">
-              <div class="back-icon">✨</div>
-              <h4>${escapeHtml(backTitle)}</h4>
-              <p>${escapeHtml(backText.substring(0, 120))}${backText.length > 120 ? '...' : ''}</p>
-              <a href="${escapeHtml(ctaUrl)}" class="event-btn">${escapeHtml(btnText)} →</a>
-            </div>
           </div>
-        </div>
-      `;
-    }).join('');
-    
-  } catch (error) {
-    console.error('Error loading events:', error);
-    container.innerHTML = `<div class="error-state">${getTranslation('error_loading')}</div>`;
+        `;
+      }).join('');
+      
+    } catch (error) {
+      console.error('Error loading events:', error);
+      container.innerHTML = `<div class="error-state">${getTranslation('error_loading')}</div>`;
+    }
   }
-}
 
   // Initialisation
   document.addEventListener('DOMContentLoaded', () => {
