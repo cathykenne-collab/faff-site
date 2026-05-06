@@ -869,3 +869,203 @@ h1 {
 .slide-container img[data-focus="right"] {
   object-position: right;
 }
+
+/* ========== PROGRAMMES - CARTES RETOURNABLES ========== */
+.programs-section {
+  padding: 80px 0;
+  background: #f8fafc;
+}
+
+.programs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.program-card {
+  background-color: transparent;
+  width: 100%;
+  height: 340px;
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.program-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+  border-radius: 20px;
+}
+
+.program-card:hover .program-card-inner {
+  transform: rotateY(180deg);
+}
+
+.program-card-front, .program-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+}
+
+.program-card-front {
+  background: white;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  z-index: 2;
+}
+
+.program-card-front .program-card-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+
+.program-card-front h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #0a3528;
+  margin-bottom: 10px;
+  font-family: Georgia, serif;
+}
+
+.program-card-front p {
+  color: #4a5568;
+  line-height: 1.5;
+  font-size: 0.85rem;
+}
+
+/* Face arrière */
+.program-card-back {
+  transform: rotateY(180deg);
+  color: white;
+  overflow-y: auto;
+}
+
+.program-card-back::-webkit-scrollbar {
+  width: 4px;
+}
+
+.program-card-back::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+}
+
+.program-card-back::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.5);
+  border-radius: 10px;
+}
+
+.program-card-back h4 {
+  font-size: 1.3rem;
+  margin-bottom: 12px;
+  font-family: Georgia, serif;
+  text-align: center;
+}
+
+.program-card-back p {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.program-card-back .btn-program {
+  background: white;
+  padding: 10px 24px;
+  border-radius: 40px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: 0.2s;
+  display: inline-block;
+  border: none;
+  cursor: pointer;
+}
+
+.program-card-back .btn-program:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+/* Couleurs des faces arrière */
+.program-card:nth-child(1) .program-card-back {
+  background: linear-gradient(135deg, #0a3528, #1a5a45);
+}
+.program-card:nth-child(1) .program-card-back .btn-program {
+  background: #e76f51;
+  color: white;
+}
+
+.program-card:nth-child(2) .program-card-back {
+  background: linear-gradient(135deg, #e76f51, #d45a3a);
+}
+.program-card:nth-child(2) .program-card-back .btn-program {
+  background: white;
+  color: #e76f51;
+}
+
+.program-card:nth-child(3) .program-card-back {
+  background: linear-gradient(135deg, #c0392b, #a0281e);
+}
+.program-card:nth-child(3) .program-card-back .btn-program {
+  background: white;
+  color: #c0392b;
+}
+
+.program-card:nth-child(4) .program-card-back {
+  background: linear-gradient(135deg, #2980b9, #1a6da5);
+}
+.program-card:nth-child(4) .program-card-back .btn-program {
+  background: white;
+  color: #2980b9;
+}
+
+.program-card:nth-child(5) .program-card-back {
+  background: linear-gradient(135deg, #8e44ad, #7d3c98);
+}
+.program-card:nth-child(5) .program-card-back .btn-program {
+  background: white;
+  color: #8e44ad;
+}
+
+.program-card:nth-child(6) .program-card-back {
+  background: linear-gradient(135deg, #f39c12, #e67e22);
+}
+.program-card:nth-child(6) .program-card-back .btn-program {
+  background: white;
+  color: #e67e22;
+}
+
+/* Responsive programmes */
+@media (max-width: 900px) {
+  .programs-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  .program-card {
+    height: 300px;
+  }
+}
+
+@media (max-width: 700px) {
+  .programs-grid {
+    grid-template-columns: 1fr;
+  }
+  .program-card {
+    height: 320px;
+  }
+}

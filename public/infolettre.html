@@ -11,10 +11,13 @@
   <script defer src="/js/i18n.js"></script>
   <style>
     .page-hero { 
-      padding: 80px 0 48px; 
+      padding: 120px 0 80px; 
       position: relative;
       overflow: hidden;
-      background: linear-gradient(135deg, #fef9e6 0%, #e9f5ef 100%);
+      background: linear-gradient(135deg, #0a3528 0%, #1a5a45 100%);
+      min-height: 400px;
+      display: flex;
+      align-items: center;
     }
 
     .hero-bg-image {
@@ -26,19 +29,39 @@
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      opacity: 0.15;
+      opacity: 0.2;
       z-index: 0;
     }
 
     .page-hero .container {
       position: relative;
-      z-index: 1;
+      z-index: 2;
+      text-align: center;
     }
 
-    .lead { 
-      color: #2d4a3b;
+    .page-hero .eyebrow {
+      color: #e76f51;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+
+    .page-hero h1 {
+      color: white;
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .page-hero .lead { 
+      color: rgba(255,255,255,0.95);
       font-size: 1.2rem;
       max-width: 700px;
+      margin: 0 auto;
+      text-shadow: 0 1px 5px rgba(0,0,0,0.2);
     }
 
     .section { padding: 70px 0; }
@@ -57,7 +80,7 @@
     
     .form-group { margin-bottom: 20px; }
     .form-group label { display: block; font-weight: 600; margin-bottom: 8px; color: #0a3528; }
-    .form-group input { width: 100%; padding: 14px 16px; border: 1px solid #e2e8f0; border-radius: 14px; font-size: 0.95rem; }
+    .form-group input { width: 100%; padding: 14px 16px; border: 1px solid #e2e8f0; border-radius: 14px; font-size: 0.95rem; transition: all 0.2s; }
     .form-group input:focus { outline: none; border-color: #e76f51; box-shadow: 0 0 0 3px rgba(231,111,81,0.1); }
     
     .submit-btn { width: 100%; padding: 14px; font-size: 1rem; background: #e76f51; color: white; border: none; cursor: pointer; border-radius: 60px; font-weight: 600; transition: 0.2s; }
@@ -75,11 +98,26 @@
     .form-feedback.success { display: block; background: #e6f7e6; color: #2e7d32; border: 1px solid #c8e6c9; }
     .form-feedback.error { display: block; background: #fee2e2; color: #c62828; border: 1px solid #ffcdd2; }
     
+    @media (max-width: 900px) {
+      .page-hero {
+        padding: 100px 0 60px;
+      }
+      .page-hero h1 {
+        font-size: 2.5rem;
+      }
+    }
+
     @media (max-width: 800px) {
       .newsletter-grid { grid-template-columns: 1fr; }
-      .page-hero { padding: 60px 0 32px; }
-      h1 { font-size: 2rem; }
-      .lead { font-size: 1rem; }
+      .page-hero { 
+        padding: 80px 0 50px; 
+      }
+      .page-hero h1 { 
+        font-size: 2rem; 
+      }
+      .page-hero .lead { 
+        font-size: 1rem; 
+      }
       .newsletter-card, .benefits-card { padding: 28px 24px; }
     }
   </style>

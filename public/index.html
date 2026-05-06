@@ -90,7 +90,7 @@
       background: #0f5c3e;
     }
 
-    /* Menu déroulant */
+    /* Menu déroulant avec effet glissant */
     .home-header .dropdown {
       position: relative;
       display: inline-block;
@@ -120,18 +120,28 @@
     }
 
     .home-header .dropdown-content {
-      display: none;
+      display: block;
       position: absolute;
       top: 100%;
       right: 0;
       background-color: white;
-      min-width: 200px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      min-width: 250px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
       border-radius: 16px;
       z-index: 1000;
       overflow: hidden;
       margin-top: 12px;
       border: 1px solid #e9ecef;
+      opacity: 0;
+      transform: translateX(100%);
+      transition: transform 0.4s ease-in-out, opacity 0.3s ease-in-out;
+      pointer-events: none;
+    }
+
+    .home-header .dropdown-content.open {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
     }
 
     .home-header .dropdown-content::before {
@@ -158,11 +168,6 @@
     .home-header .dropdown-content a:hover {
       background-color: #fef9e6;
       color: #e76f51;
-    }
-
-    .home-header .dropdown.active .dropdown-content,
-    .home-header .dropdown:hover .dropdown-content {
-      display: block;
     }
 
     .home-header .lang-switch {
@@ -252,7 +257,7 @@
       text-shadow: 0 1px 8px rgba(0,0,0,0.3);
     }
 
-    /* ========== CARTES FLOTTANTES SUR LA VIDÉO ========== */
+    /* ========== CARTES FLOTTANTES SUR LA VIDÉO AVEC COULEURS FAFF ========== */
     .floating-cards {
       position: absolute;
       bottom: 40px;
@@ -305,11 +310,43 @@
       padding: 25px;
     }
 
-    .flip-card-front {
-      background: linear-gradient(135deg, rgba(10,53,40,0.9), rgba(26,90,69,0.9));
+    /* Carte 1 - Bleu vif */
+    .flip-card:nth-child(1) .flip-card-front {
+      background: linear-gradient(135deg, rgba(0, 112, 243, 0.92), rgba(0, 85, 204, 0.92));
       backdrop-filter: blur(10px);
       color: white;
       border: 1px solid rgba(255,255,255,0.2);
+    }
+    .flip-card:nth-child(1) .flip-card-back {
+      background: linear-gradient(135deg, #0070f3, #0055cc);
+      color: white;
+      transform: rotateY(180deg);
+    }
+
+    /* Carte 2 - Orange tendant vers le jaune */
+    .flip-card:nth-child(2) .flip-card-front {
+      background: linear-gradient(135deg, rgba(255, 140, 0, 0.92), rgba(255, 100, 0, 0.92));
+      backdrop-filter: blur(10px);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .flip-card:nth-child(2) .flip-card-back {
+      background: linear-gradient(135deg, #ff8c00, #ff6400);
+      color: white;
+      transform: rotateY(180deg);
+    }
+
+    /* Carte 3 - Rouge FAFF */
+    .flip-card:nth-child(3) .flip-card-front {
+      background: linear-gradient(135deg, rgba(231,111,81,0.92), rgba(212,90,58,0.92));
+      backdrop-filter: blur(10px);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .flip-card:nth-child(3) .flip-card-back {
+      background: linear-gradient(135deg, #e76f51, #d45a3a);
+      color: white;
+      transform: rotateY(180deg);
     }
 
     .flip-card-front .card-icon {
@@ -327,14 +364,6 @@
       font-size: 0.9rem;
       line-height: 1.4;
       opacity: 0.9;
-    }
-
-    .flip-card-back {
-      background: rgba(231, 111, 81, 0.95);
-      backdrop-filter: blur(10px);
-      color: white;
-      transform: rotateY(180deg);
-      border: 1px solid rgba(255,255,255,0.2);
     }
 
     .flip-card-back h4 {
@@ -383,7 +412,7 @@
     .program-card {
       background-color: transparent;
       width: 100%;
-      height: 320px;
+      height: 340px;
       perspective: 1000px;
       cursor: pointer;
     }
@@ -393,10 +422,9 @@
       width: 100%;
       height: 100%;
       text-align: center;
-      transition: transform 0.6s;
+      transition: transform 0.8s;
       transform-style: preserve-3d;
       border-radius: 20px;
-      overflow: hidden;
     }
 
     .program-card:hover .program-card-inner {
@@ -440,37 +468,46 @@
     .program-card-front p {
       color: #4a5568;
       line-height: 1.5;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
 
+    /* Face arrière des cartes programmes */
     .program-card-back {
-      background: #0a3528;
-      color: white;
       transform: rotateY(180deg);
-      padding: 25px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      color: white;
+      overflow-y: auto;
+    }
+
+    .program-card-back::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .program-card-back::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+    }
+
+    .program-card-back::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.5);
+      border-radius: 10px;
     }
 
     .program-card-back h4 {
-      font-size: 1.4rem;
-      margin-bottom: 15px;
+      font-size: 1.3rem;
+      margin-bottom: 12px;
       font-family: Georgia, serif;
       text-align: center;
     }
 
     .program-card-back p {
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       line-height: 1.5;
       margin-bottom: 20px;
       text-align: center;
     }
 
     .program-card-back .btn-program {
-      background: #e76f51;
-      color: white;
+      background: white;
       padding: 10px 24px;
       border-radius: 40px;
       text-decoration: none;
@@ -478,11 +515,62 @@
       font-size: 0.9rem;
       transition: 0.2s;
       display: inline-block;
+      border: none;
+      cursor: pointer;
     }
 
     .program-card-back .btn-program:hover {
-      background: #d45a3a;
       transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
+    /* Couleurs des faces arrière des programmes */
+    .program-card:nth-child(1) .program-card-back {
+      background: linear-gradient(135deg, #0a3528, #1a5a45);
+    }
+    .program-card:nth-child(1) .program-card-back .btn-program {
+      background: #e76f51;
+      color: white;
+    }
+
+    .program-card:nth-child(2) .program-card-back {
+      background: linear-gradient(135deg, #e76f51, #d45a3a);
+    }
+    .program-card:nth-child(2) .program-card-back .btn-program {
+      background: white;
+      color: #e76f51;
+    }
+
+    .program-card:nth-child(3) .program-card-back {
+      background: linear-gradient(135deg, #c0392b, #a0281e);
+    }
+    .program-card:nth-child(3) .program-card-back .btn-program {
+      background: white;
+      color: #c0392b;
+    }
+
+    .program-card:nth-child(4) .program-card-back {
+      background: linear-gradient(135deg, #2980b9, #1a6da5);
+    }
+    .program-card:nth-child(4) .program-card-back .btn-program {
+      background: white;
+      color: #2980b9;
+    }
+
+    .program-card:nth-child(5) .program-card-back {
+      background: linear-gradient(135deg, #8e44ad, #7d3c98);
+    }
+    .program-card:nth-child(5) .program-card-back .btn-program {
+      background: white;
+      color: #8e44ad;
+    }
+
+    .program-card:nth-child(6) .program-card-back {
+      background: linear-gradient(135deg, #f39c12, #e67e22);
+    }
+    .program-card:nth-child(6) .program-card-back .btn-program {
+      background: white;
+      color: #e67e22;
     }
 
     /* Section titre */
@@ -494,45 +582,96 @@
       font-family: Georgia, serif;
     }
 
-    /* ========== DIAPORAMA OPTIMISÉ - IMAGE ENTIÈRE DANS LE CADRE ========== */
+    /* ========== DIAPORAMA AVEC TRANSITIONS EN FONDU ========== */
     #event-slider {
       position: relative;
       overflow: hidden;
       border-radius: 22px;
       min-height: auto !important;
+      height: 100%;
     }
 
-    #event-slider .slide-container {
+    #event-slider .slider-container {
       position: relative;
       width: 100%;
+      height: 100%;
       aspect-ratio: 16 / 9;
       overflow: hidden;
       background: #0a3528;
     }
 
-    #event-slider .slide-container img {
+    #event-slider .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      object-fit: contain;  /* L'image entière s'insère sans être coupée */
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
+      pointer-events: none;
+    }
+
+    #event-slider .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #event-slider .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       object-position: center;
       display: block;
       background: #0a3528;
     }
 
-    /* Responsive pour le diaporama */
+    #event-slider .slide-info {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 28px 24px;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
+      color: white;
+      border-radius: 0 0 22px 22px;
+      z-index: 1;
+    }
+
+    #event-slider .slide-info .badge {
+      background: #e76f51;
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    #event-slider .slide-info h3 {
+      color: white;
+      font-size: 1.7rem;
+      font-weight: 700;
+      margin: 8px 0 6px;
+    }
+
+    #event-slider .slide-info p {
+      color: #fef9e6;
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+
     @media (max-width: 768px) {
-      #event-slider .slide-container {
+      #event-slider .slider-container {
         aspect-ratio: 4 / 3;
       }
     }
 
     @media (max-width: 480px) {
-      #event-slider .slide-container {
+      #event-slider .slider-container {
         aspect-ratio: 1 / 1;
       }
     }
 
-    /* Responsive général */
     @media (max-width: 900px) {
       .floating-cards-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -544,6 +683,9 @@
       }
       .flip-card, .program-card {
         height: 260px;
+      }
+      .program-card {
+        height: 300px;
       }
       .home-header .logo-text {
         font-size: 1rem;
@@ -589,6 +731,9 @@
       .program-card-front .program-card-img {
         height: 160px;
       }
+      .program-card {
+        height: 320px;
+      }
     }
   </style>
 </head>
@@ -613,11 +758,6 @@
           <a href="/programmes.html" data-i18n="nav_programs">Programmes</a>
           <a href="/impact.html" data-i18n="nav_impact">Impact</a>
           <a href="/evenements.html" data-i18n="nav_events">Événements</a>
-          <a href="/soutenir.html" data-i18n="nav_support">Soutenir</a>
-          <a href="/infolettre.html" data-i18n="nav_newsletter">Infolettre</a>
-          <a href="/partenaires.html" data-i18n="nav_partners">Partenaires</a>
-          <a href="/accessibilite.html" data-i18n="nav_accessibility">Accessibilité</a>
-          <a href="/contact.html" data-i18n="nav_contact">Contact</a>
         </div>
       </div>
 
@@ -709,9 +849,9 @@
               <p data-i18n="program_1_text">Ateliers, accompagnement parental et soutien aux familles pour renforcer les liens et la communication.</p>
             </div>
             <div class="program-card-back">
-              <h4 data-i18n="program_1_title">Renforcement des liens familiaux</h4>
-              <p data-i18n="program_1_text">Ateliers pratiques, médiation familiale et accompagnement personnalisé pour créer un environnement familial harmonieux.</p>
-              <a href="/inscription.html" class="btn-program" data-i18n="program_cta">Participer →</a>
+              <h4>Renforcement des liens familiaux</h4>
+              <p>Ateliers pratiques sur la communication parent-enfant, médiation familiale, soutien psychologique, activités familiales et accompagnement personnalisé pour créer un environnement familial harmonieux et épanouissant.</p>
+              <a href="/inscription.html?programme=Renforcement%20des%20liens%20familiaux" class="btn-program">Participer →</a>
             </div>
           </div>
         </div>
@@ -725,9 +865,9 @@
               <p data-i18n="program_2_text">Espace d'échange et de valorisation du rôle paternel dans l'éducation et la vie familiale.</p>
             </div>
             <div class="program-card-back">
-              <h4 data-i18n="program_2_title">Repère des Pères</h4>
-              <p data-i18n="program_2_text">Ateliers, discussions et activités pour renforcer le lien père-enfant et promouvoir un rôle paternel actif.</p>
-              <a href="/inscription.html" class="btn-program" data-i18n="program_cta">Participer →</a>
+              <h4>Repère des Pères</h4>
+              <p>Un espace unique dédié aux pères pour échanger, partager leurs expériences, renforcer leur rôle parental, participer à des ateliers thématiques et créer un réseau de soutien entre pères.</p>
+              <a href="/inscription.html?programme=Repère%20des%20Pères" class="btn-program">Participer →</a>
             </div>
           </div>
         </div>
@@ -741,9 +881,9 @@
               <p data-i18n="program_3_text">Renforcement des compétences, partage d'expériences et soutien aux mères dans leur rôle éducatif.</p>
             </div>
             <div class="program-card-back">
-              <h4 data-i18n="program_3_title">Mamans & Savoirs</h4>
-              <p data-i18n="program_3_text">Ateliers pratiques, groupes de parole et accompagnement pour les mères dans leur quotidien.</p>
-              <a href="/inscription.html" class="btn-program" data-i18n="program_cta">Participer →</a>
+              <h4>Mamans & Savoirs</h4>
+              <p>Un programme conçu pour les mamans : ateliers pratiques sur l'éducation des enfants, groupes de parole, développement personnel, accompagnement psychologique et social, et moments de partage entre mamans.</p>
+              <a href="/inscription.html?programme=Mamans%20%26%20Savoirs" class="btn-program">Participer →</a>
             </div>
           </div>
         </div>
@@ -757,9 +897,9 @@
               <p data-i18n="program_4_text">Sport, intégration et apprentissage de la langue française pour les jeunes à travers le football.</p>
             </div>
             <div class="program-card-back">
-              <h4 data-i18n="program_4_title">Football en Français</h4>
-              <p data-i18n="program_4_text">Entraînements, tournois et activités linguistiques pour allier sport et apprentissage du français.</p>
-              <a href="/inscription.html" class="btn-program" data-i18n="program_cta">Participer →</a>
+              <h4>Football en Français</h4>
+              <p>Alliez sport et apprentissage ! Entraînements de football encadrés par des éducateurs, apprentissage du français à travers le sport, tournois interculturels, développement de l'esprit d'équipe et de la confiance en soi.</p>
+              <a href="/inscription.html?programme=Football%20en%20Français" class="btn-program">Participer →</a>
             </div>
           </div>
         </div>
@@ -773,9 +913,9 @@
               <p data-i18n="program_5_text">Expression artistique, développement de la confiance et leadership jeunesse à travers les arts.</p>
             </div>
             <div class="program-card-back">
-              <h4 data-i18n="program_5_title">Franc'Ô Talent</h4>
-              <p data-i18n="program_5_text">Ateliers artistiques, spectacles et projets créatifs pour révéler les talents des jeunes.</p>
-              <a href="/inscription.html" class="btn-program" data-i18n="program_cta">Participer →</a>
+              <h4>Franc'Ô Talent</h4>
+              <p>Révélez vos talents ! Ateliers de théâtre, musique, danse, arts visuels, expression orale, développement de la confiance en soi, projets créatifs collectifs et spectacles communautaires.</p>
+              <a href="/inscription.html?programme=Franc%27%C3%94%20Talent" class="btn-program">Participer →</a>
             </div>
           </div>
         </div>
@@ -789,9 +929,9 @@
               <p data-i18n="program_6_text">Accompagnement des parents dans le système scolaire pour favoriser la réussite éducative.</p>
             </div>
             <div class="program-card-back">
-              <h4 data-i18n="program_6_title">Médiation famille-école</h4>
-              <p data-i18n="program_6_text">Ateliers, rencontres et accompagnement pour faciliter la communication entre familles et écoles.</p>
-              <a href="/inscription.html" class="btn-program" data-i18n="program_cta">Participer →</a>
+              <h4>Médiation famille-école</h4>
+              <p>Facilitez le lien entre votre famille et l'école ! Ateliers de compréhension du système scolaire, accompagnement aux réunions parents-professeurs, médiation en cas de difficultés, soutien à la réussite éducative.</p>
+              <a href="/inscription.html?programme=Médiation%20famille-école" class="btn-program">Participer →</a>
             </div>
           </div>
         </div>
@@ -799,7 +939,7 @@
     </div>
   </section>
 
-  <!-- DIAPORAMA -->
+  <!-- DIAPORAMA AVEC TRANSITIONS EN FONDU -->
   <section class="section">
     <div class="container">
       <div class="eyebrow" data-i18n="gallery_eyebrow">Retour en images</div>
@@ -807,7 +947,9 @@
 
       <div class="card" style="overflow:hidden;">
         <div id="event-slider" style="background:#f3f4f6; position:relative;">
-          <p style="padding:24px; text-align:center;" data-i18n="gallery_loading">Chargement des moments forts...</p>
+          <div class="slider-container">
+            <!-- Les slides seront générés dynamiquement par JavaScript -->
+          </div>
         </div>
 
         <div class="slider-controls">
@@ -832,18 +974,22 @@
     }
   });
 
-  // ========== DROPDOWN MENU ==========
-  let dropdownTimeout;
+  // ========== DROPDOWN MENU AVEC EFFET GLISSANT ==========
   const dropdown = document.getElementById('mainDropdown');
-  if (dropdown) {
-    dropdown.addEventListener('mouseenter', () => {
-      clearTimeout(dropdownTimeout);
-      dropdown.classList.add('active');
+  const dropdownContent = document.querySelector('.home-header .dropdown-content');
+  const dropbtn = document.getElementById('dropbtn');
+
+  if (dropdown && dropdownContent && dropbtn) {
+    dropbtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdownContent.classList.toggle('open');
     });
-    dropdown.addEventListener('mouseleave', () => {
-      dropdownTimeout = setTimeout(() => {
-        dropdown.classList.remove('active');
-      }, 200);
+
+    // Ferme le menu si on clique en dehors
+    document.addEventListener('click', (e) => {
+      if (!dropdown.contains(e.target)) {
+        dropdownContent.classList.remove('open');
+      }
     });
   }
 
@@ -876,7 +1022,7 @@
       hero_eyebrow: "Familles Afro Francofun",
       hero_title: "Construire des familles afro francophones fortes, stables et engagées",
       hero_subtitle: "FAFF accompagne les familles, les parents et les jeunes.",
-      hero_cta_1: "Participer",
+      hero_cta_1: "Adhérer",
       hero_cta_2: "Faire un don",
       hero_cta_3: "Devenir partenaire",
       gallery_eyebrow: "Retour en images",
@@ -928,7 +1074,7 @@
       hero_eyebrow: "Afro Francofun Families",
       hero_title: "Building strong, stable and engaged Afro-Francophone families",
       hero_subtitle: "FAFF supports families, parents and youth.",
-      hero_cta_1: "Join us",
+      hero_cta_1: "Join",
       hero_cta_2: "Donate",
       hero_cta_3: "Become a partner",
       gallery_eyebrow: "In pictures",
@@ -993,13 +1139,12 @@
       }
     });
 
-    if (typeof eventSlides !== 'undefined' && eventSlides.length) renderEventSlide();
-    setTimeout(bustImageCache, 100);
+    if (typeof eventSlides !== 'undefined' && eventSlides.length) renderSlides();
   }
 
-  // ========== DIAPORAMA ==========
+  // ========== DIAPORAMA AVEC TRANSITIONS EN FONDU ==========
   let eventSlides = [];
-  let currentEventSlide = 0;
+  let currentSlideIndex = 0;
   let autoTimer = null;
   const AUTO_INTERVAL_MS = 5000;
 
@@ -1013,45 +1158,84 @@
     });
   }
 
-  function renderEventSlide() {
-    const container = document.getElementById("event-slider");
+  function renderSlides() {
+    const container = document.querySelector('#event-slider .slider-container');
     if (!container) return;
 
     if (!eventSlides.length) {
       const emptyMsg = currentLang === 'fr'
         ? "📸 Aucune photo disponible pour le moment.<br>Revenez bientôt pour découvrir nos événements !"
         : "📸 No photos available at the moment.<br>Come back soon to discover our events!";
-      container.innerHTML = `<div class="slide-container" style="display:flex; align-items:center; justify-content:center; background:#faf7f0; color:#4a5b52; flex-direction:column; gap:12px; border-radius:22px;"><p>${emptyMsg}</p></div>`;
+      container.innerHTML = `<div style="display:flex; align-items:center; justify-content:center; background:#faf7f0; color:#4a5b52; flex-direction:column; gap:12px; height:100%; border-radius:22px;"><p>${emptyMsg}</p></div>`;
       return;
     }
 
-    const slide = eventSlides[currentEventSlide];
-    if (!slide) return;
+    // Génère les slides
+    container.innerHTML = eventSlides.map((slide, index) => {
+      const timestamp = new Date().getTime();
+      const imageUrl = slide.image ? `${slide.image}?t=${timestamp}` : 'https://placehold.co/1200x600/e0e7e3/2c5f4e?text=FAFF+Event';
+      const altText = slide.alt || slide.title || 'FAFF Event';
+      const titleText = currentLang === 'fr' ? (slide.title_fr || slide.title) : (slide.title_en || slide.title);
+      const description = currentLang === 'fr' ? (slide.alt_fr || slide.alt) : (slide.alt_en || slide.alt);
+      const eventLabel = currentLang === 'fr' ? (slide.event_label_fr || slide.event_label) : (slide.event_label_en || slide.event_label);
+      const defaultLabel = currentLang === 'fr' ? 'Vie associative' : 'Community life';
 
-    const timestamp = new Date().getTime();
-    const imageUrl = slide.image ? `${slide.image}?t=${timestamp}` : 'https://placehold.co/1200x600/e0e7e3/2c5f4e?text=FAFF+Event';
-    const altText = slide.alt || slide.title || 'FAFF Event';
-    const titleText = currentLang === 'fr' ? (slide.title_fr || slide.title) : (slide.title_en || slide.title);
-    const description = currentLang === 'fr' ? (slide.alt_fr || slide.alt) : (slide.alt_en || slide.alt);
-    const eventLabel = currentLang === 'fr' ? (slide.event_label_fr || slide.event_label) : (slide.event_label_en || slide.event_label);
-    const defaultLabel = currentLang === 'fr' ? 'Vie associative' : 'Community life';
-
-    container.innerHTML = `
-      <div class="slide-container">
-        <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(altText)}" onerror="this.onerror=null; this.src='https://placehold.co/1200x600/b7cfc3/1f4738?text=FAFF'">
-        <div style="position:absolute; left:0; right:0; bottom:0; padding:28px 24px; background:linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, transparent 100%); color:white; border-radius:0 0 22px 22px;">
-          <span class="badge" style="background:#e76f51; display:inline-block; margin-bottom:12px;">${escapeHtml(eventLabel || defaultLabel)}</span>
-          ${titleText ? `<h3 style="color:white; font-size:1.7rem; font-weight:700; margin:8px 0 6px;">${escapeHtml(titleText)}</h3>` : ''}
-          ${description ? `<p style="color:#fef9e6; font-size:1rem;">${escapeHtml(description)}</p>` : ''}
+      return `
+        <div class="slide ${index === 0 ? 'active' : ''}" data-index="${index}">
+          <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(altText)}" onerror="this.onerror=null; this.src='https://placehold.co/1200x600/b7cfc3/1f4738?text=FAFF'">
+          <div class="slide-info">
+            <span class="badge">${escapeHtml(eventLabel || defaultLabel)}</span>
+            ${titleText ? `<h3>${escapeHtml(titleText)}</h3>` : ''}
+            ${description ? `<p>${escapeHtml(description)}</p>` : ''}
+          </div>
         </div>
-      </div>
-    `;
+      `;
+    }).join('');
   }
 
-  function nextEventSlide() { if (eventSlides.length) { currentEventSlide = (currentEventSlide + 1) % eventSlides.length; renderEventSlide(); resetAutoTimer(); } }
-  function prevEventSlide() { if (eventSlides.length) { currentEventSlide = (currentEventSlide - 1 + eventSlides.length) % eventSlides.length; renderEventSlide(); resetAutoTimer(); } }
-  function resetAutoTimer() { if (autoTimer) { clearInterval(autoTimer); autoTimer = null; } if (eventSlides.length > 1) autoTimer = setInterval(() => nextEventSlide(), AUTO_INTERVAL_MS); }
-  function stopAutoTimer() { if (autoTimer) { clearInterval(autoTimer); autoTimer = null; } }
+  function showSlide(index) {
+    const slides = document.querySelectorAll('#event-slider .slide');
+    if (!slides.length) return;
+
+    // Désactive tous les slides
+    slides.forEach(slide => {
+      slide.classList.remove('active');
+    });
+
+    // Active le slide courant
+    slides[index].classList.add('active');
+  }
+
+  function nextSlide() {
+    if (!eventSlides.length) return;
+    currentSlideIndex = (currentSlideIndex + 1) % eventSlides.length;
+    showSlide(currentSlideIndex);
+    resetAutoTimer();
+  }
+
+  function prevSlide() {
+    if (!eventSlides.length) return;
+    currentSlideIndex = (currentSlideIndex - 1 + eventSlides.length) % eventSlides.length;
+    showSlide(currentSlideIndex);
+    resetAutoTimer();
+  }
+
+  function resetAutoTimer() {
+    if (autoTimer) {
+      clearInterval(autoTimer);
+      autoTimer = null;
+    }
+    if (eventSlides.length > 1) {
+      autoTimer = setInterval(() => nextSlide(), AUTO_INTERVAL_MS);
+    }
+  }
+
+  function stopAutoTimer() {
+    if (autoTimer) {
+      clearInterval(autoTimer);
+      autoTimer = null;
+    }
+  }
 
   const fallbackSlides = [
     { image: "https://placehold.co/1200x600/b97f5e/ffffff?text=Fête+des+Familles+2025", title: "Fête des Familles Francofun", title_en: "Francofun Families Celebration", alt: "Familles réunies autour d'un grand repas partagé", alt_en: "Families gathered around a shared meal", event_label: "Événement phare", event_label_en: "Flagship event" },
@@ -1060,34 +1244,82 @@
   ];
 
   async function loadEventSlides() {
-    const containerTemp = document.getElementById("event-slider");
-    if (containerTemp) containerTemp.innerHTML = `<p style="padding:24px; text-align:center;">Chargement...</p>`;
+    const container = document.querySelector('#event-slider .slider-container');
+    if (container) container.innerHTML = `<p style="padding:24px; text-align:center;">Chargement...</p>`;
+
     try {
       const response = await fetch("/api/event-slides");
       if (response.ok) {
         const data = await response.json();
         if (Array.isArray(data) && data.length) {
-          eventSlides = data.map(item => ({ image: item.image || '', title: item.title || '', title_en: item.title_en || item.title || '', alt: item.alt || '', alt_en: item.alt_en || item.alt || '', event_label: item.event_label || '', event_label_en: item.event_label_en || item.event_label || '' })).filter(s => s.image);
-        } else eventSlides = [...fallbackSlides];
-      } else eventSlides = [...fallbackSlides];
-    } catch (error) { eventSlides = [...fallbackSlides]; }
-    currentEventSlide = 0; renderEventSlide(); stopAutoTimer(); if (eventSlides.length > 1) autoTimer = setInterval(() => nextEventSlide(), AUTO_INTERVAL_MS);
+          eventSlides = data.map(item => ({
+            image: item.image || '',
+            title: item.title || '',
+            title_en: item.title_en || item.title || '',
+            alt: item.alt || '',
+            alt_en: item.alt_en || item.alt || '',
+            event_label: item.event_label || '',
+            event_label_en: item.event_label_en || item.event_label || ''
+          })).filter(s => s.image);
+        } else {
+          eventSlides = [...fallbackSlides];
+        }
+      } else {
+        eventSlides = [...fallbackSlides];
+      }
+    } catch (error) {
+      eventSlides = [...fallbackSlides];
+    }
+
+    currentSlideIndex = 0;
+    renderSlides();
+    if (eventSlides.length > 0) {
+      showSlide(currentSlideIndex);
+    }
+    stopAutoTimer();
+    if (eventSlides.length > 1) {
+      resetAutoTimer();
+    }
   }
 
   document.addEventListener("DOMContentLoaded", () => {
     const savedLang = localStorage.getItem('faff_lang') || 'fr';
     updateUILanguage(savedLang);
     loadEventSlides();
-    document.getElementById("prevSlideBtn")?.addEventListener("click", (e) => { e.preventDefault(); prevEventSlide(); });
-    document.getElementById("nextSlideBtn")?.addEventListener("click", (e) => { e.preventDefault(); nextEventSlide(); });
+
+    // Contrôles manuels
+    document.getElementById("prevSlideBtn")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      prevSlide();
+    });
+
+    document.getElementById("nextSlideBtn")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      nextSlide();
+    });
+
+    // Pause sur hover
     const sliderContainer = document.getElementById("event-slider");
     if (sliderContainer) {
-      sliderContainer.addEventListener("mouseenter", () => { if (autoTimer) { clearInterval(autoTimer); autoTimer = null; } });
-      sliderContainer.addEventListener("mouseleave", () => { if (eventSlides.length > 1 && !autoTimer) autoTimer = setInterval(() => nextEventSlide(), AUTO_INTERVAL_MS); });
+      sliderContainer.addEventListener("mouseenter", stopAutoTimer);
+      sliderContainer.addEventListener("mouseleave", resetAutoTimer);
     }
-    document.querySelectorAll('.lang-btn').forEach(btn => { btn.addEventListener('click', () => { const lang = btn.dataset.lang; if (lang) { updateUILanguage(lang); localStorage.setItem('faff_lang', lang); } }); });
+
+    // Changement de langue
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const lang = btn.dataset.lang;
+        if (lang) {
+          updateUILanguage(lang);
+          localStorage.setItem('faff_lang', lang);
+        }
+      });
+    });
   });
-  window.addEventListener("beforeunload", () => { if (autoTimer) clearInterval(autoTimer); });
+
+  window.addEventListener("beforeunload", () => {
+    if (autoTimer) clearInterval(autoTimer);
+  });
 </script>
 
 </body>

@@ -22,18 +22,6 @@ function loadHeader() {
           <a href="/programmes.html" data-i18n="nav_programs">Programmes</a>
           <a href="/impact.html" data-i18n="nav_impact">Impact</a>
           <a href="/evenements.html" data-i18n="nav_events">Événements</a>
-          <a href="/soutenir.html" data-i18n="nav_support">Soutenir</a>
-          <a href="/infolettre.html" data-i18n="nav_newsletter">Infolettre</a>
-          
-          <!-- Menu déroulant Plus -->
-          <div class="dropdown" id="mainDropdown">
-            <button class="dropbtn" data-i18n="nav_more">Plus ▼</button>
-            <div class="dropdown-content">
-              <a href="/partenaires.html" data-i18n="nav_partners">Partenaires</a>
-              <a href="/accessibilite.html" data-i18n="nav_accessibility">Accessibilité</a>
-              <a href="/contact.html" data-i18n="nav_contact">Contact</a>
-            </div>
-          </div>
           
           <a href="/soutenir.html#don" class="nav-cta" data-i18n="nav_donate">Faire un don</a>
         </nav>
@@ -45,9 +33,6 @@ function loadHeader() {
       </div>
     </header>
   `;
-  
-  // Initialiser le dropdown
-  initDropdown();
   
   // Appliquer la langue sauvegardée
   if (typeof window.updateUILanguage === 'function') {
@@ -61,57 +46,6 @@ function loadHeader() {
   document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.removeEventListener('click', handleLangClick);
     btn.addEventListener('click', handleLangClick);
-  });
-}
-
-// Gestion du dropdown avec délai
-let dropdownTimeout;
-
-function initDropdown() {
-  const dropdown = document.getElementById('mainDropdown');
-  if (!dropdown) return;
-  
-  // Desktop : au survol
-  dropdown.addEventListener('mouseenter', () => {
-    clearTimeout(dropdownTimeout);
-    dropdown.classList.add('active');
-  });
-  
-  dropdown.addEventListener('mouseleave', () => {
-    dropdownTimeout = setTimeout(() => {
-      dropdown.classList.remove('active');
-    }, 200);
-  });
-  
-  // Mobile : au clic
-  const dropbtn = dropdown.querySelector('.dropbtn');
-  if (dropbtn) {
-    dropbtn.addEventListener('click', (e) => {
-      if (window.innerWidth <= 900) {
-        e.preventDefault();
-        e.stopPropagation();
-        document.querySelectorAll('.dropdown.active').forEach(d => {
-          if (d !== dropdown) d.classList.remove('active');
-        });
-        dropdown.classList.toggle('active');
-      }
-    });
-  }
-  
-  // Fermer le dropdown si on clique ailleurs (mobile)
-  document.addEventListener('click', (e) => {
-    if (window.innerWidth <= 900) {
-      if (!dropdown.contains(e.target)) {
-        dropdown.classList.remove('active');
-      }
-    }
-  });
-  
-  // Réinitialiser au redimensionnement
-  window.addEventListener('resize', () => {
-    if (window.innerWidth > 900) {
-      dropdown.classList.remove('active');
-    }
   });
 }
 
@@ -132,7 +66,6 @@ function refreshLogo() {
 }
 
 window.refreshLogo = refreshLogo;
-window.initDropdown = initDropdown;
 
 // Charger le header au chargement de la page
 document.addEventListener('DOMContentLoaded', loadHeader);

@@ -11,6 +11,60 @@
   <script defer src="/js/i18n.js"></script>
   <style>
     /* ========== STYLES SPÉCIFIQUES À LA PAGE ÉVÉNEMENTS ========== */
+    .page-hero {
+      padding: 120px 0 80px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #0a3528 0%, #1a5a45 100%);
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-bg-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.2;
+      z-index: 0;
+    }
+
+    .page-hero .container {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+
+    .page-hero .eyebrow {
+      color: #e76f51;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+
+    .page-hero h1 {
+      color: white;
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .page-hero .lead {
+      color: rgba(255,255,255,0.95);
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto;
+      text-shadow: 0 1px 5px rgba(0,0,0,0.2);
+    }
+
     .section-alt {
       background: #faf9f6;
     }
@@ -98,7 +152,7 @@
       margin-bottom: 0;
     }
 
-    /* Face arrière */
+    /* Face arrière avec couleurs FAFF */
     .event-flip-back {
       position: absolute;
       width: 100%;
@@ -149,6 +203,14 @@
     .event-flip-back .event-btn:hover {
       transform: scale(1.05);
       background: #fef9e6;
+    }
+
+    /* Couleurs différentes pour chaque carte (optionnel) */
+    .event-flip-card:nth-child(odd) .event-flip-back {
+      background: linear-gradient(135deg, #e76f51, #d45a3a);
+    }
+    .event-flip-card:nth-child(even) .event-flip-back {
+      background: linear-gradient(135deg, #0a3528, #1a5a45);
     }
 
     /* Archives grid */
@@ -242,6 +304,12 @@
 
     /* Responsive */
     @media (max-width: 900px) {
+      .page-hero {
+        padding: 100px 0 60px;
+      }
+      .page-hero h1 {
+        font-size: 2.5rem;
+      }
       .events-grid {
         grid-template-columns: 1fr;
         gap: 25px;
@@ -252,6 +320,15 @@
     }
 
     @media (max-width: 700px) {
+      .page-hero {
+        padding: 80px 0 50px;
+      }
+      .page-hero h1 {
+        font-size: 2rem;
+      }
+      .page-hero .lead {
+        font-size: 1rem;
+      }
       .event-flip-card {
         height: 350px;
       }
@@ -391,7 +468,7 @@
         const date = lang === 'en' ? (event.date_label_en || event.date_label_fr) : (event.date_label_fr || event.date_label_en);
         const btnText = lang === 'en' ? (event.cta_label_en || event.cta_label_fr || 'Register') : (event.cta_label_fr || 'S\'inscrire');
         
-        // MODIFICATION ICI : Ajout du paramètre event_name dans l'URL
+        // Ajout du paramètre event_name dans l'URL
         const ctaUrl = `/inscription.html?event_name=${encodeURIComponent(title)}&event_id=${event.id}`;
         
         const eventImage = event.image && event.image !== '/uploads/null' ? event.image : '/images/event-default.jpg';

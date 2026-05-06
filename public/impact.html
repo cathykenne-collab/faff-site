@@ -12,10 +12,13 @@
   <style>
     /* Styles spécifiques à la page Impact */
     .page-hero {
-      padding: 80px 0 48px;
+      padding: 120px 0 80px;
       position: relative;
       overflow: hidden;
-      background: linear-gradient(135deg, #fef9e6 0%, #e9f5ef 100%);
+      background: linear-gradient(135deg, #0a3528 0%, #1a5a45 100%);
+      min-height: 400px;
+      display: flex;
+      align-items: center;
     }
 
     .hero-bg-image {
@@ -27,19 +30,39 @@
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      opacity: 0.15;
+      opacity: 0.2;
       z-index: 0;
     }
 
     .page-hero .container {
       position: relative;
-      z-index: 1;
+      z-index: 2;
+      text-align: center;
     }
 
-    .lead {
-      color: #2d4a3b;
+    .page-hero .eyebrow {
+      color: #e76f51;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+
+    .page-hero h1 {
+      color: white;
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .page-hero .lead {
+      color: rgba(255,255,255,0.95);
       font-size: 1.2rem;
       max-width: 700px;
+      margin: 0 auto;
+      text-shadow: 0 1px 5px rgba(0,0,0,0.2);
     }
 
     .section-alt {
@@ -51,6 +74,7 @@
       font-weight: 700;
       margin-bottom: 32px;
       color: #0a3528;
+      text-align: center;
     }
 
     /* Statistiques */
@@ -264,6 +288,15 @@
     }
 
     /* Responsive */
+    @media (max-width: 900px) {
+      .page-hero {
+        padding: 100px 0 60px;
+      }
+      .page-hero h1 {
+        font-size: 2.5rem;
+      }
+    }
+
     @media (max-width: 800px) {
       .stats-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -282,12 +315,12 @@
         justify-content: center;
       }
       .page-hero {
-        padding: 60px 0 32px;
+        padding: 80px 0 50px;
       }
-      h1 {
+      .page-hero h1 {
         font-size: 2rem;
       }
-      .lead {
+      .page-hero .lead {
         font-size: 1rem;
       }
       .loading-spinner, .empty-message {
@@ -309,6 +342,9 @@
       .temoignage-header {
         flex-direction: column;
         text-align: center;
+      }
+      h2 {
+        font-size: 1.6rem;
       }
     }
   </style>
@@ -332,19 +368,19 @@
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-number">500+</div>
-          <div class="stat-label" data-i18n="impact_page_stat_1">Familles</div>
+          <div class="stat-label" data-i18n="impact_page_stat_1">Familles accompagnées</div>
         </div>
         <div class="stat-card">
           <div class="stat-number">300+</div>
-          <div class="stat-label" data-i18n="impact_page_stat_2">Jeunes</div>
+          <div class="stat-label" data-i18n="impact_page_stat_2">Jeunes mobilisés</div>
         </div>
         <div class="stat-card">
           <div class="stat-number">40+</div>
-          <div class="stat-label" data-i18n="impact_page_stat_3">Partenaires</div>
+          <div class="stat-label" data-i18n="impact_page_stat_3">Partenaires actifs</div>
         </div>
         <div class="stat-card">
           <div class="stat-number">95%</div>
-          <div class="stat-label" data-i18n="impact_page_stat_4">Satisfaction</div>
+          <div class="stat-label" data-i18n="impact_page_stat_4">Taux de satisfaction</div>
         </div>
       </div>
     </div>
@@ -371,10 +407,20 @@
             <div class="report-icon">📊</div>
             <div>
               <h3 data-i18n="impact_report_1_title">Rapport d'impact 2025</h3>
-              <p class="report-meta" data-i18n="impact_report_1_text">Résultats, indicateurs et faits saillants.</p>
+              <p class="report-meta" data-i18n="impact_report_1_text">Résultats, indicateurs et faits saillants de l'année.</p>
             </div>
           </div>
           <a class="btn btn-primary download-btn" href="/documents/rapport-impact-2025.pdf" target="_blank" data-i18n="download_btn">📥 Télécharger</a>
+        </div>
+        <div class="report-item">
+          <div class="report-info">
+            <div class="report-icon">📈</div>
+            <div>
+              <h3 data-i18n="impact_report_2_title">Rapport d'activités 2024</h3>
+              <p class="report-meta" data-i18n="impact_report_2_text">Bilan complet des actions et réalisations.</p>
+            </div>
+          </div>
+          <a class="btn btn-primary download-btn" href="/documents/rapport-activites-2024.pdf" target="_blank" data-i18n="download_btn">📥 Télécharger</a>
         </div>
       </div>
     </div>

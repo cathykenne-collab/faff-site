@@ -10,6 +10,60 @@
   <script defer src="/js/footer.js"></script>
   <script defer src="/js/i18n.js"></script>
   <style>
+    .page-hero {
+      padding: 120px 0 80px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #0a3528 0%, #1a5a45 100%);
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-bg-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.2;
+      z-index: 0;
+    }
+
+    .page-hero .container {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+
+    .page-hero .eyebrow {
+      color: #e76f51;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+
+    .page-hero h1 {
+      color: white;
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .page-hero .lead {
+      color: rgba(255,255,255,0.95);
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto;
+      text-shadow: 0 1px 5px rgba(0,0,0,0.2);
+    }
+
     .members-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -81,9 +135,36 @@
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
+    .empty-message {
+      text-align: center;
+      padding: 60px;
+      background: #f8fafc;
+      border-radius: 24px;
+      color: #6c757d;
+    }
+
     @media (max-width: 1000px) {
       .members-grid {
         grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 900px) {
+      .page-hero {
+        padding: 100px 0 60px;
+      }
+      .page-hero h1 {
+        font-size: 2.5rem;
+      }
+    }
+    @media (max-width: 800px) {
+      .page-hero {
+        padding: 80px 0 50px;
+      }
+      .page-hero h1 {
+        font-size: 2rem;
+      }
+      .page-hero .lead {
+        font-size: 1rem;
       }
     }
     @media (max-width: 600px) {
@@ -120,6 +201,8 @@
 <div id="footer-placeholder"></div>
 
 <script>
+  let currentLang = localStorage.getItem('faff_lang') || 'fr';
+
   function refreshBanner() {
     const bannerDiv = document.getElementById('hero-bg-image');
     if (bannerDiv) {
@@ -165,7 +248,7 @@
 
   async function loadMembres() {
     const container = document.getElementById('members-container');
-    const lang = typeof currentLang !== 'undefined' ? currentLang : (localStorage.getItem('faff_lang') || 'fr');
+    const lang = currentLang;
     
     try {
       const response = await fetch('/api/membres');
@@ -176,32 +259,40 @@
         return;
       }
       
+      // Filtrer les membres actifs uniquement
+      const activeMembres = membres.filter(m => m.is_active === 1);
+      
       // Grouper par catégorie
       const grouped = {};
-      membres.forEach(m => {
+      activeMembres.forEach(m => {
         if (!grouped[m.categorie]) grouped[m.categorie] = [];
         grouped[m.categorie].push(m);
       });
       
+      // Ordre des catégories
+      const categoryOrder = ['equipe', 'ca', 'benevole', 'ambassadeur'];
+      
       let html = '';
-      for (const [cat, members] of Object.entries(grouped)) {
-        html += `
-          <div class="category-section">
-            <h2 class="category-title">${getCategoryName(cat, lang)}</h2>
-            <div class="members-grid">
-              ${members.map(m => `
-                <div class="member-card">
-                  ${m.photo ? `<img src="${escapeHtml(m.photo)}?t=${Date.now()}" alt="${escapeHtml(m.prenom)} ${escapeHtml(m.nom)}" class="member-photo" onerror="this.src='https://placehold.co/300x250/0f5c3e/white?text=Photo'">` : '<div style="height: 250px; background: #0a3528; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white;">👤</div>'}
-                  <div class="member-info">
-                    <h3>${escapeHtml(m.prenom)} ${escapeHtml(m.nom)}</h3>
-                    <div class="role">${escapeHtml(m.role)}</div>
-                    ${m.description ? `<div class="description">${escapeHtml(m.description)}</div>` : ''}
+      for (const cat of categoryOrder) {
+        if (grouped[cat] && grouped[cat].length) {
+          html += `
+            <div class="category-section">
+              <h2 class="category-title">${getCategoryName(cat, lang)}</h2>
+              <div class="members-grid">
+                ${grouped[cat].map(m => `
+                  <div class="member-card">
+                    ${m.photo ? `<img src="${escapeHtml(m.photo)}?t=${Date.now()}" alt="${escapeHtml(m.prenom)} ${escapeHtml(m.nom)}" class="member-photo" onerror="this.src='https://placehold.co/300x250/0f5c3e/white?text=Photo'">` : '<div style="height: 250px; background: #0a3528; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white;">👤</div>'}
+                    <div class="member-info">
+                      <h3>${escapeHtml(m.prenom)} ${escapeHtml(m.nom)}</h3>
+                      <div class="role">${escapeHtml(m.role)}</div>
+                      ${m.description ? `<div class="description">${escapeHtml(m.description)}</div>` : ''}
+                    </div>
                   </div>
-                </div>
-              `).join('')}
+                `).join('')}
+              </div>
             </div>
-          </div>
-        `;
+          `;
+        }
       }
       container.innerHTML = html;
     } catch (error) {
@@ -209,6 +300,12 @@
       container.innerHTML = `<div class="empty-message">❌ ${getTranslation('error_loading')}</div>`;
     }
   }
+
+  // Écouter les changements de langue
+  document.addEventListener('languageChanged', (e) => {
+    currentLang = e.detail.lang;
+    loadMembres();
+  });
 
   document.addEventListener('DOMContentLoaded', () => {
     refreshBanner();

@@ -10,6 +10,60 @@
   <script defer src="/js/footer.js"></script>
   <script defer src="/js/i18n.js"></script>
   <style>
+    .page-hero {
+      padding: 120px 0 80px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #0a3528 0%, #1a5a45 100%);
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-bg-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.2;
+      z-index: 0;
+    }
+
+    .page-hero .container {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+
+    .page-hero .eyebrow {
+      color: #e76f51;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+
+    .page-hero h1 {
+      color: white;
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .page-hero .lead {
+      color: rgba(255,255,255,0.95);
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto;
+      text-shadow: 0 1px 5px rgba(0,0,0,0.2);
+    }
+
     .offers-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -126,8 +180,25 @@
       border-left: 4px solid #e76f51;
     }
     @media (max-width: 900px) {
+      .page-hero {
+        padding: 100px 0 60px;
+      }
+      .page-hero h1 {
+        font-size: 2.5rem;
+      }
       .grid-3 {
         grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 800px) {
+      .page-hero {
+        padding: 80px 0 50px;
+      }
+      .page-hero h1 {
+        font-size: 2rem;
+      }
+      .page-hero .lead {
+        font-size: 1rem;
       }
     }
     @media (max-width: 700px) {
@@ -198,6 +269,8 @@
 <div id="footer-placeholder"></div>
 
 <script>
+  let currentLang = localStorage.getItem('faff_lang') || 'fr';
+
   function refreshBanner() {
     const bannerDiv = document.getElementById('hero-bg-image');
     if (bannerDiv) {
@@ -207,8 +280,6 @@
   }
 
   function getTranslation(key) {
-    let lang = localStorage.getItem('faff_lang') || 'fr';
-    
     const translations = {
       fr: {
         recrutement_no_offers: 'Aucune offre disponible pour le moment.',
@@ -244,8 +315,8 @@
       }
     };
     
-    if (translations[lang] && translations[lang][key]) {
-      return translations[lang][key];
+    if (translations[currentLang] && translations[currentLang][key]) {
+      return translations[currentLang][key];
     }
     return key;
   }
@@ -329,12 +400,11 @@
     loadOffers();
     updateUILanguage();
     
-    // Écouter les changements de langue du header global
-    window.addEventListener('storage', (e) => {
-      if (e.key === 'faff_lang') {
-        loadOffers();
-        updateUILanguage();
-      }
+    // Écouter les changements de langue
+    document.addEventListener('languageChanged', (e) => {
+      currentLang = e.detail.lang;
+      loadOffers();
+      updateUILanguage();
     });
   });
 
