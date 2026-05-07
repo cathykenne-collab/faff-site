@@ -5,44 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const db = require('../db');
 
-// ========== AUTHENTIFICATION ADMIN ==========
-// Utilise la variable d'environnement ADMIN_PASSWORD sur Render
-// Par défaut, mot de passe sécurisé (à changer absolument)
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'FAFF@dmin2025!';
-
-// Middleware d'authentification
-function requireAuth(req, res, next) {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader) {
-    res.setHeader('WWW-Authenticate', 'Basic');
-    return res.status(401).json({ error: 'Authentification requise' });
-  }
-
-  try {
-    const base64 = authHeader.split(' ')[1];
-    const credentials = Buffer.from(base64, 'base64').toString('utf-8');
-    const [username, password] = credentials.split(':');
-
-    if (username === 'admin' && password === ADMIN_PASSWORD) {
-      next();
-    } else {
-      res.status(403).json({ error: 'Accès non autorisé' });
-    }
-  } catch (err) {
-    res.status(403).json({ error: 'Accès non autorisé' });
-  }
-}
-
-// Appliquer l'authentification à TOUTES les routes admin
-router.use(requireAuth);
-
-// ========== Route de vérification d'authentification ==========
-router.get('/check-auth', (req, res) => {
-  res.json({ authenticated: true });
-});
-
-// ========== Configuration multer pour mémoire (pour les images) ==========
+// Configuration multer pour mémoire (pour les images)
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
@@ -155,7 +118,7 @@ router.delete('/event-slides/:id', (req, res) => {
 router.get('/events', (req, res) => {
   try {
     const rows = db.prepare(`
-      SELECT * FROM events
+      SELECT * FROM events 
       ORDER BY sort_order ASC, id DESC
     `).all();
     res.json(rows);
@@ -180,12 +143,12 @@ router.post('/events', upload.single('image'), (req, res) => {
 
     const stmt = db.prepare(`
       INSERT INTO events (
-        title_fr, title_en, details_fr, details_en,
-        date_label_fr, date_label_en, cta_label_fr, cta_label_en,
+        title_fr, title_en, details_fr, details_en, 
+        date_label_fr, date_label_en, cta_label_fr, cta_label_en, 
         cta_url, sort_order, is_active, image
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)
     `);
-
+    
     const result = stmt.run(
       title_fr || null,
       title_en || title_fr || null,
@@ -369,31 +332,20 @@ router.get('/recrutement/admin', (req, res) => {
   }
 });
 
-router.post('/recrutement', upload.single('pdf'), (req, res) => {
+router.post('/recrutement', (req, res) => {
   try {
     const { titre, description, lieu, type_contrat, date_limite } = req.body;
 
-    let pdfUrl = null;
-    if (req.file) {
-      const ext = path.extname(req.file.originalname);
-      const filename = `recrutement_${Date.now()}${ext}`;
-      pdfUrl = `/uploads/recrutement/${filename}`;
-      const uploadDir = path.join(__dirname, '../../public/uploads/recrutement');
-      if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
-      fs.writeFileSync(path.join(uploadDir, filename), req.file.buffer);
-    }
-
     const stmt = db.prepare(`
-      INSERT INTO recrutement (titre, description, lieu, type_contrat, date_limite, pdf_url, is_active)
-      VALUES (?, ?, ?, ?, ?, ?, 1)
+      INSERT INTO recrutement (titre, description, lieu, type_contrat, date_limite, is_active)
+      VALUES (?, ?, ?, ?, ?, 1)
     `);
     const result = stmt.run(
       titre || null,
       description || null,
       lieu || null,
       type_contrat || null,
-      date_limite || null,
-      pdfUrl
+      date_limite || null
     );
 
     res.json({ success: true, id: result.lastInsertRowid });
@@ -422,76 +374,6 @@ router.delete('/recrutement/:id', (req, res) => {
   try {
     const { id } = req.params;
     db.prepare("DELETE FROM recrutement WHERE id = ?").run(id);
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// ========== GESTION TÉMOIGNAGES ==========
-router.get('/temoignages/admin', (req, res) => {
-  try {
-    const temoignages = db.prepare("SELECT * FROM temoignages ORDER BY ordre ASC").all();
-    res.json(temoignages);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-router.post('/temoignages', upload.single('photo'), (req, res) => {
-  try {
-    const { auteur, role, categorie, contenu, ordre, is_active } = req.body;
-
-    let photoPath = null;
-    if (req.file) {
-      const ext = path.extname(req.file.originalname);
-      const filename = `temoignage_${Date.now()}${ext}`;
-      photoPath = `/uploads/${filename}`;
-      const uploadDir = path.join(__dirname, '../../public/uploads');
-      if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
-      fs.writeFileSync(path.join(uploadDir, filename), req.file.buffer);
-    }
-
-    const stmt = db.prepare(`
-      INSERT INTO temoignages (auteur, role, categorie, contenu, photo, ordre, is_active)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `);
-    const result = stmt.run(
-      auteur || null,
-      role || null,
-      categorie || null,
-      contenu || null,
-      photoPath,
-      Number(ordre) || 0,
-      is_active ? 1 : 0
-    );
-
-    res.json({ success: true, id: result.lastInsertRowid });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-router.put('/temoignages/:id', (req, res) => {
-  try {
-    const { id } = req.params;
-    const { is_active } = req.body;
-
-    const stmt = db.prepare(`
-      UPDATE temoignages SET is_active = ? WHERE id = ?
-    `);
-    stmt.run(is_active ? 1 : 0, id);
-
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-router.delete('/temoignages/:id', (req, res) => {
-  try {
-    const { id } = req.params;
-    db.prepare("DELETE FROM temoignages WHERE id = ?").run(id);
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });

@@ -295,31 +295,6 @@
       transform: scale(1.05);
     }
 
-    /* Bouton déconnexion */
-    .logout-btn {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #c0392b;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 40px;
-      font-weight: 600;
-      cursor: pointer;
-      z-index: 1000;
-      transition: 0.2s;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    }
-    .logout-btn:hover {
-      background: #a0281e;
-      transform: translateY(-2px);
-    }
-
     /* Bannière admin */
     .page-hero {
       padding: 120px 0 80px;
@@ -391,12 +366,6 @@
       .page-hero h1 {
         font-size: 2.5rem;
       }
-      .logout-btn {
-        top: 10px;
-        right: 10px;
-        padding: 6px 12px;
-        font-size: 0.7rem;
-      }
     }
 
     @media (max-width: 600px) {
@@ -413,61 +382,6 @@
   </style>
 </head>
 <body>
-
-<!-- BOUTON DÉCONNEXION -->
-<button class="logout-btn" onclick="logout()">🚪 Déconnexion</button>
-
-<!-- VÉRIFICATION D'AUTHENTIFICATION AVEC INTERCEPTION DES REQUÊTES -->
-<script>
-  // Récupérer les credentials
-  let storedCredentials = localStorage.getItem('admin_credentials');
-
-  // Si pas de credentials, rediriger vers login
-  if (!storedCredentials) {
-    window.location.href = '/login.html';
-  }
-
-  // Intercepter toutes les requêtes fetch pour ajouter le header d'authentification
-  const originalFetch = window.fetch;
-  window.fetch = function(url, options = {}) {
-    options.headers = options.headers || {};
-    options.headers['Authorization'] = 'Basic ' + storedCredentials;
-    return originalFetch(url, options);
-  };
-
-  // Intercepter XMLHttpRequest pour l'upload de fichiers
-  const originalXHROpen = XMLHttpRequest.prototype.open;
-  XMLHttpRequest.prototype.open = function(method, url, async, user, password) {
-    this.addEventListener('readystatechange', function() {
-      if (this.readyState === 1) { // OPENED
-        this.setRequestHeader('Authorization', 'Basic ' + storedCredentials);
-      }
-    });
-    originalXHROpen.call(this, method, url, async !== false, user, password);
-  };
-
-  // Fonction de déconnexion
-  function logout() {
-    localStorage.removeItem('admin_credentials');
-    localStorage.removeItem('admin_auth');
-    localStorage.removeItem('admin_login_time');
-    window.location.href = '/login.html';
-  }
-
-  // Vérifier périodiquement si les credentials sont toujours valides
-  async function checkAuth() {
-    try {
-      const response = await fetch('/api/admin/check-auth');
-      if (!response.ok) {
-        logout();
-      }
-    } catch (err) {
-      console.error('Erreur auth:', err);
-    }
-  }
-  // Vérifier toutes les 5 minutes
-  setInterval(checkAuth, 300000);
-</script>
 
 <div id="header-placeholder"></div>
 
@@ -991,13 +905,12 @@ Voici les actualités du mois..."></textarea>
 
   async function refreshAll() {
     try {
-      const [inscriptions, events, slides, contacts, newsletter, temoignages, recrutement] = await Promise.all([
+      const [inscriptions, events, slides, contacts, newsletter, recrutement] = await Promise.all([
         fetchAPI("/api/admin/inscriptions").catch(() => []),
         fetchAPI("/api/admin/events").catch(() => []),
         fetchAPI("/api/admin/event-slides").catch(() => []),
         fetchAPI("/api/admin/contacts").catch(() => []),
         fetchAPI("/api/newsletter").catch(() => []),
-        fetchAPI("/api/temoignages/admin").catch(() => []),
         fetchAPI("/api/recrutement/admin").catch(() => [])
       ]);
 
@@ -1007,7 +920,7 @@ Voici les actualités du mois..."></textarea>
         inscriptions: inscriptions?.length || 0,
         contacts: contacts?.length || 0,
         newsletter: newsletter?.length || 0,
-        temoignages: temoignages?.length || 0
+        temoignages: 0
       };
 
       updateStats();
@@ -1016,7 +929,6 @@ Voici les actualités du mois..."></textarea>
       renderSlides(slides);
       renderContacts(contacts);
       renderNewsletter(newsletter);
-      renderTemoignages(temoignages);
       renderRecrutement(recrutement);
       renderImageGallery();
     } catch (err) {
@@ -1147,7 +1059,6 @@ Voici les actualités du mois..."></textarea>
       <div class="admin-item">
         <strong>${escapeHtml(o.titre || "-")}</strong>
         <p>📍 ${escapeHtml(o.lieu || "Non spécifié")} | ${escapeHtml(o.type_contrat || "Non spécifié")}</p>
-        ${o.pdf_url ? `<p>📎 <a href="${escapeHtml(o.pdf_url)}" target="_blank" style="color:#e76f51;">Voir la fiche de poste (PDF)</a></p>` : '<p>📎 Aucun PDF</p>'}
         <p class="mono">📅 Date limite: ${o.date_limite ? new Date(o.date_limite).toLocaleDateString() : "Non spécifiée"}</p>
         <p>${escapeHtml(o.description ? o.description.substring(0, 100) + (o.description.length > 100 ? "..." : "") : "-")}</p>
         <div class="admin-actions">
@@ -1590,40 +1501,10 @@ Voici les actualités du mois..."></textarea>
     if (!confirm("Supprimer cet abonné ?")) return;
     try {
       const res = await fetch(`/api/newsletter/${id}`, { method: "DELETE" });
-      if (res.ok)
-        refreshAll();
-      else
-        alert("Erreur lors de la suppression");
+      if (res.ok) refreshAll();
+      else alert("Erreur lors de la suppression");
     } catch (err) { alert("Erreur: " + err.message); }
   };
-
-  // ========== PRÉVISUALISATIONS ==========
-  document.getElementById("fixed-image-input")?.addEventListener("change", e => {
-    const file = e.target.files[0];
-    const box = document.getElementById("fixed-image-preview");
-    const img = document.getElementById("fixed-preview-img");
-    if (!file) { box.style.display = "none"; return; }
-    img.src = URL.createObjectURL(file);
-    box.style.display = "block";
-  });
-
-  document.getElementById("slide-file")?.addEventListener("change", e => {
-    const file = e.target.files[0];
-    const box = document.getElementById("slide-preview");
-    const img = document.getElementById("slide-preview-img");
-    if (!file) { box.style.display = "none"; return; }
-    img.src = URL.createObjectURL(file);
-    box.style.display = "block";
-  });
-
-  document.getElementById("event-image-input")?.addEventListener("change", e => {
-    const file = e.target.files[0];
-    const box = document.getElementById("event-image-preview");
-    const img = document.getElementById("event-preview-img");
-    if (!file) { box.style.display = "none"; return; }
-    img.src = URL.createObjectURL(file);
-    box.style.display = "block";
-  });
 
   // ========== TABS NAVIGATION ==========
   function initTabs() {
@@ -1644,6 +1525,9 @@ Voici les actualités du mois..."></textarea>
     initTabs();
     refreshAll();
     refreshAdminBanner();
+    loadMembres();
+    loadRecrutement();
+    loadTemoignagesAdmin();
   });
 </script>
 
