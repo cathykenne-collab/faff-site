@@ -417,20 +417,33 @@
 <!-- BOUTON DÉCONNEXION -->
 <button class="logout-btn" onclick="logout()">🚪 Déconnexion</button>
 
-<!-- VÉRIFICATION D'AUTHENTIFICATION -->
+<!-- VÉRIFICATION D'AUTHENTIFICATION AVEC INTERCEPTION DES REQUÊTES -->
 <script>
-  // Vérifier si l'utilisateur est authentifié
-  const storedCredentials = localStorage.getItem('admin_credentials');
+  // Récupérer les credentials
+  let storedCredentials = localStorage.getItem('admin_credentials');
+
+  // Si pas de credentials, rediriger vers login
   if (!storedCredentials) {
     window.location.href = '/login.html';
   }
 
-  // Ajouter le header d'authentification à toutes les requêtes fetch
+  // Intercepter toutes les requêtes fetch pour ajouter le header d'authentification
   const originalFetch = window.fetch;
   window.fetch = function(url, options = {}) {
     options.headers = options.headers || {};
     options.headers['Authorization'] = 'Basic ' + storedCredentials;
     return originalFetch(url, options);
+  };
+
+  // Intercepter XMLHttpRequest pour l'upload de fichiers
+  const originalXHROpen = XMLHttpRequest.prototype.open;
+  XMLHttpRequest.prototype.open = function(method, url, async, user, password) {
+    this.addEventListener('readystatechange', function() {
+      if (this.readyState === 1) { // OPENED
+        this.setRequestHeader('Authorization', 'Basic ' + storedCredentials);
+      }
+    });
+    originalXHROpen.call(this, method, url, async !== false, user, password);
   };
 
   // Fonction de déconnexion
