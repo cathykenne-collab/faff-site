@@ -5,7 +5,39 @@ const path = require('path');
 const fs = require('fs');
 const db = require('../db');
 
-// Configuration multer pour mémoire (pour les images)
+// ========== AUTHENTIFICATION ADMIN ==========
+// Utilise la variable d'environnement ADMIN_PASSWORD sur Render
+// Par défaut, mot de passe sécurisé (à changer absolument)
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'FAFF@dmin2025!';
+
+// Middleware d'authentification
+function requireAuth(req, res, next) {
+  const authHeader = req.headers.authorization;
+  
+  if (!authHeader) {
+    res.setHeader('WWW-Authenticate', 'Basic');
+    return res.status(401).json({ error: 'Authentification requise' });
+  }
+  
+  try {
+    const base64 = authHeader.split(' ')[1];
+    const credentials = Buffer.from(base64, 'base64').toString('utf-8');
+    const [username, password] = credentials.split(':');
+    
+    if (username === 'admin' && password === ADMIN_PASSWORD) {
+      next();
+    } else {
+      res.status(403).json({ error: 'Accès non autorisé' });
+    }
+  } catch (err) {
+    res.status(403).json({ error: 'Accès non autorisé' });
+  }
+}
+
+// Appliquer l'authentification à TOUTES les routes admin
+router.use(requireAuth);
+
+// ========== Configuration multer pour mémoire (pour les images) ==========
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
@@ -332,20 +364,31 @@ router.get('/recrutement/admin', (req, res) => {
   }
 });
 
-router.post('/recrutement', (req, res) => {
+router.post('/recrutement', upload.single('pdf'), (req, res) => {
   try {
     const { titre, description, lieu, type_contrat, date_limite } = req.body;
 
+    let pdfUrl = null;
+    if (req.file) {
+      const ext = path.extname(req.file.originalname);
+      const filename = `recrutement_${Date.now()}${ext}`;
+      pdfUrl = `/uploads/recrutement/${filename}`;
+      const uploadDir = path.join(__dirname, '../../public/uploads/recrutement');
+      if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+      fs.writeFileSync(path.join(uploadDir, filename), req.file.buffer);
+    }
+
     const stmt = db.prepare(`
-      INSERT INTO recrutement (titre, description, lieu, type_contrat, date_limite, is_active)
-      VALUES (?, ?, ?, ?, ?, 1)
+      INSERT INTO recrutement (titre, description, lieu, type_contrat, date_limite, pdf_url, is_active)
+      VALUES (?, ?, ?, ?, ?, ?, 1)
     `);
     const result = stmt.run(
       titre || null,
       description || null,
       lieu || null,
       type_contrat || null,
-      date_limite || null
+      date_limite || null,
+      pdfUrl
     );
 
     res.json({ success: true, id: result.lastInsertRowid });

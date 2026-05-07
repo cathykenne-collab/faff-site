@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAFF | Accès admin</title>
+  <link rel="icon" href="/images/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #0a3528 0%, #1a5a45 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: system-ui, 'Segoe UI', sans-serif;
+    }
+    .login-container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 40px;
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    .login-container h2 {
+      color: #0a3528;
+      margin-bottom: 20px;
+      font-family: Georgia, serif;
+    }
+    .login-container input {
+      width: 100%;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+    .login-container input:focus {
+      outline: none;
+      border-color: #e76f51;
+      box-shadow: 0 0 0 3px rgba(231,111,81,0.1);
+    }
+    .login-container button {
+      width: 100%;
+      padding: 14px;
+      background: #e76f51;
+      color: white;
+      border: none;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .login-container button:hover {
+      background: #d45a3a;
+      transform: translateY(-2px);
+    }
+    .error-msg {
+      color: #c62828;
+      margin-top: 15px;
+      font-size: 0.9rem;
+      display: none;
+    }
+    .logo {
+      margin-bottom: 20px;
+    }
+    .logo img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo">
+      <img src="/images/logo.png" alt="FAFF Logo">
+    </div>
+    <h2>🔒 Accès administrateur</h2>
+    <form id="login-form">
+      <input type="password" id="password" placeholder="Mot de passe" required autofocus>
+      <button type="submit">Se connecter</button>
+      <div id="error-msg" class="error-msg">Mot de passe incorrect</div>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('login-form');
+    const errorDiv = document.getElementById('error-msg');
+    
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const password = document.getElementById('password').value;
+      
+      // Utiliser le même mot de passe que dans admin.js
+      // Sur Render, utilisez la variable d'environnement ADMIN_PASSWORD
+      const ADMIN_PASSWORD = 'FAFF@dmin2025!';
+      
+      if (password === ADMIN_PASSWORD) {
+        const credentials = btoa('admin:' + password);
+        localStorage.setItem('admin_credentials', credentials);
+        localStorage.setItem('admin_auth', 'true');
+        localStorage.setItem('admin_login_time', Date.now());
+        window.location.href = '/admin.html';
+      } else {
+        errorDiv.style.display = 'block';
+        document.getElementById('password').value = '';
+        setTimeout(() => {
+          errorDiv.style.display = 'none';
+        }, 3000);
+      }
+    });
+  </script>
+</body>
+</html>
