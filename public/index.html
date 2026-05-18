@@ -336,18 +336,25 @@
       transform: rotateY(180deg);
     }
 
-    /* Carte 3 - Rouge FAFF */
-    .flip-card:nth-child(3) .flip-card-front {
-      background: linear-gradient(135deg, rgba(231,111,81,0.92), rgba(212,90,58,0.92));
-      backdrop-filter: blur(10px);
-      color: white;
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-    .flip-card:nth-child(3) .flip-card-back {
-      background: linear-gradient(135deg, #e76f51, #d45a3a);
-      color: white;
-      transform: rotateY(180deg);
-    }
+    /* Carte 3 - Vert profond FAFF */
+.flip-card:nth-child(3) .flip-card-front {
+  background: linear-gradient(135deg, rgba(10, 53, 40, 0.94), rgba(15, 92, 62, 0.94));
+  backdrop-filter: blur(10px);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.25);
+}
+
+.flip-card:nth-child(3) .flip-card-back {
+  background: linear-gradient(135deg, #0a3528, #0f5c3e);
+  color: white;
+  transform: rotateY(180deg);
+}
+
+/* Bouton carte 3 */
+.flip-card:nth-child(3) .flip-card-back .btn-small {
+  background: white;
+  color: #0a3528;
+}
 
     .flip-card-front .card-icon {
       font-size: 2.5rem;
