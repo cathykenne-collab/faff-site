@@ -959,18 +959,28 @@ Voici les actualités du mois..."></textarea>
       el.innerHTML = '<div class="empty-message" data-i18n="admin_no_inscriptions">Aucune inscription.</div>';
       return;
     }
-    el.innerHTML = items.map(i => `
-      <div class="admin-item">
-        <strong>👤 ${escapeHtml(i.nom || "-")}</strong>
-        <p>📧 ${escapeHtml(i.email || "-")}</p>
-        <p>📞 ${escapeHtml(i.telephone || "-")}</p>
-        <p>📌 Programme : ${escapeHtml(i.programme || "-")}</p>
-        <p class="mono">📅 ${i.created_at ? new Date(i.created_at).toLocaleString() : "-"}</p>
-        <div class="admin-actions">
-          <button class="btn btn-secondary btn-small" onclick="deleteInscription(${i.id})" data-i18n="admin_delete_btn">🗑️ Supprimer</button>
+
+    el.innerHTML = items.map(i => {
+      const ville = i.ville_residence || i.ville || i.date_souhaitee || "-";
+      const infos = i.infos || i.informations_complementaires || "-";
+      const langue = i.langue === "en" ? "English" : (i.langue === "fr" ? "Français" : (i.langue || "-"));
+
+      return `
+        <div class="admin-item">
+          <strong>👤 ${escapeHtml(i.nom || "-")}</strong>
+          <p>📧 ${escapeHtml(i.email || "-")}</p>
+          <p>📞 Téléphone : ${escapeHtml(i.telephone || "-")}</p>
+          <p>📍 Ville de résidence : ${escapeHtml(ville)}</p>
+          <p>📌 Programme : ${escapeHtml(i.programme || "-")}</p>
+          <p>🌐 Langue préférée : ${escapeHtml(langue)}</p>
+          <p>📝 Informations complémentaires : ${escapeHtml(infos)}</p>
+          <p class="mono">📅 Inscription reçue le : ${i.created_at ? new Date(i.created_at).toLocaleString() : "-"}</p>
+          <div class="admin-actions">
+            <button class="btn btn-secondary btn-small" onclick="deleteInscription(${i.id})" data-i18n="admin_delete_btn">🗑️ Supprimer</button>
+          </div>
         </div>
-      </div>
-    `).join("");
+      `;
+    }).join("");
   }
 
   function renderEvents(items) {

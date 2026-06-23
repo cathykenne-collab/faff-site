@@ -61,8 +61,8 @@
 
             <div class="form-row">
               <div>
-                <label data-i18n="registration_date">Date souhaitée</label>
-                <input type="date" name="date_souhaitee">
+                <label data-i18n="registration_city">Ville de résidence</label>
+                <input type="text" name="ville_residence" placeholder="Cambridge, Kitchener, Waterloo...">
               </div>
               <div>
                 <label data-i18n="registration_preferred_lang">Langue préférée</label>
@@ -248,7 +248,7 @@
       registration_phone: "Téléphone",
       registration_program: "Programme / Événement",
       registration_choose_program: "Choisir un programme ou événement",
-      registration_date: "Date souhaitée",
+      registration_city: "Ville de résidence",
       registration_preferred_lang: "Langue préférée",
       registration_infos: "Informations complémentaires",
       registration_submit: "Soumettre ma candidature",
@@ -276,7 +276,7 @@
       registration_phone: "Phone",
       registration_program: "Program / Event",
       registration_choose_program: "Choose a program or event",
-      registration_date: "Preferred date",
+      registration_city: "City of residence",
       registration_preferred_lang: "Preferred language",
       registration_infos: "Additional information",
       registration_submit: "Submit my application",
@@ -452,11 +452,13 @@
       
       const formData = new FormData(e.target);
       const data = {
-        nom: formData.get('nom'),
-        email: formData.get('email'),
+        nom: formData.get('nom')?.trim(),
+        email: formData.get('email')?.trim(),
+        telephone: formData.get('telephone')?.trim() || null,
         programme: formData.get('programme'),
-        date_souhaitee: formData.get('date_souhaitee') || null,
-        infos: formData.get('infos') || null
+        ville_residence: formData.get('ville_residence')?.trim() || null,
+        langue: formData.get('langue') || 'fr',
+        infos: formData.get('infos')?.trim() || null
       };
       
       console.log('📤 Envoi inscription:', data);

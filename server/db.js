@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs");
 
 const dataDir = path.join(__dirname, "data");
+
 if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true });
 }
@@ -12,11 +13,17 @@ const db = new Database(dbPath);
 
 db.pragma("foreign_keys = ON");
 
+/**
+ * Vérifie si une colonne existe dans une table.
+ */
 function columnExists(table, column) {
   const columns = db.prepare(`PRAGMA table_info(${table})`).all();
-  return columns.some(c => c.name === column);
+  return columns.some((c) => c.name === column);
 }
 
+/**
+ * Ajoute une colonne uniquement si elle n'existe pas encore.
+ */
 function addColumn(table, column, definition) {
   if (!columnExists(table, column)) {
     db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
@@ -24,13 +31,21 @@ function addColumn(table, column, definition) {
   }
 }
 
+/**
+ * Création initiale des tables.
+ *
+ * Les instructions CREATE TABLE IF NOT EXISTS servent aussi lorsqu'une
+ * nouvelle base de données est créée sur un autre environnement.
+ */
 db.exec(`
   CREATE TABLE IF NOT EXISTS inscriptions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nom TEXT,
     email TEXT,
+    telephone TEXT,
     programme TEXT,
-    date_souhaitee TEXT,
+    ville_residence TEXT,
+    langue TEXT DEFAULT 'fr',
     infos TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
@@ -131,13 +146,36 @@ db.exec(`
   );
 `);
 
-/* MIGRATION POUR LA TABLE EVENTS - AJOUT DE LA COLONNE IMAGE */
+/* =========================================================
+   MIGRATIONS INSCRIPTIONS
+========================================================= */
+
+addColumn("inscriptions", "telephone", "TEXT");
+addColumn("inscriptions", "ville_residence", "TEXT");
+addColumn("inscriptions", "langue", "TEXT DEFAULT 'fr'");
+addColumn("inscriptions", "infos", "TEXT");
+
+/*
+ * L'ancienne colonne date_souhaitee peut rester dans une ancienne base.
+ * Elle ne sera simplement plus utilisée par le nouveau formulaire.
+ */
+
+/* =========================================================
+   MIGRATIONS EVENTS
+========================================================= */
+
 addColumn("events", "image", "TEXT");
 
-/* MIGRATION POUR LA TABLE NEWSLETTER - AJOUT DE is_active */
+/* =========================================================
+   MIGRATIONS NEWSLETTER
+========================================================= */
+
 addColumn("newsletter", "is_active", "INTEGER DEFAULT 1");
 
-/* MIGRATIONS MEMBRES */
+/* =========================================================
+   MIGRATIONS MEMBRES
+========================================================= */
+
 addColumn("membres", "nom", "TEXT");
 addColumn("membres", "prenom", "TEXT");
 addColumn("membres", "role", "TEXT");
@@ -152,7 +190,10 @@ addColumn("membres", "bio", "TEXT");
 addColumn("membres", "is_active", "INTEGER DEFAULT 1");
 addColumn("membres", "updated_at", "DATETIME");
 
-/* MIGRATIONS TEMOIGNAGES */
+/* =========================================================
+   MIGRATIONS TEMOIGNAGES
+========================================================= */
+
 addColumn("temoignages", "nom", "TEXT");
 addColumn("temoignages", "prenom", "TEXT");
 addColumn("temoignages", "auteur", "TEXT");
@@ -168,7 +209,10 @@ addColumn("temoignages", "ordre", "INTEGER DEFAULT 0");
 addColumn("temoignages", "is_approved", "INTEGER DEFAULT 1");
 addColumn("temoignages", "is_active", "INTEGER DEFAULT 1");
 
-/* MIGRATIONS RECRUTEMENT */
+/* =========================================================
+   MIGRATIONS RECRUTEMENT
+========================================================= */
+
 addColumn("recrutement", "titre", "TEXT");
 addColumn("recrutement", "description", "TEXT");
 addColumn("recrutement", "lieu", "TEXT");
